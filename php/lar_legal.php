@@ -82,7 +82,7 @@ if (empty($pg)) {
 
     <center>
         <h1>
-            Escolha sua rede social para acessar sua conta!
+            Utilize sua conta do Facebook para entrar no seu processo de regularização fundi&aacute;ria!
         </h1>
 
 
@@ -163,7 +163,7 @@ if (empty($pg)) {
                 console.log('Welcome!  Fetching your information.... ');
                 FB.api('/me?fields=name,email,picture', function (response) {
                     console.log('Successful login for: ' + response.name);
-                    alert(response);
+                    // alert(response);
                     main = response;
                     document.getElementById('status').innerHTML =
                             'Redirecionando... Aguarde, ' + response.name + '!';
@@ -180,9 +180,9 @@ if (empty($pg)) {
 
         <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
         </fb:login-button>
-
         <div id="status">
         </div>
+        <?php get_template_part( 'content', 'page' ); ?>
     </center>
     <?php
 } else {

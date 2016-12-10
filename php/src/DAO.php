@@ -11,6 +11,12 @@ class DAO {
     // The database connection
     protected static $connection;
 
+    public function close() {
+        if (isset($connection)) {
+            mysql_close($connection);
+        }
+    }
+
     /**
      * Connect to the database
      * 
@@ -20,7 +26,7 @@ class DAO {
         // Try and connect to the database
         if (!isset(self::$connection)) {
             // Load configuration as an array. Use the actual location of your configuration file
-            $config = parse_ini_file(PATH.'src/database.ini');
+            $config = parse_ini_file('/home/manguevi/public_html/wp/wp-content/themes/vantage/templates/src/database.ini');
             self::$connection = new mysqli('localhost', $config['username'], $config['password'], $config['dbname']);
         }
 
