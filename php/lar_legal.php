@@ -13,7 +13,7 @@ get_header();
 
         const PATH = '/home/manguevi/public_html/wp/wp-content/themes/vantage/templates/';
 ?>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/south-street/jquery-ui.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/south-street/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
@@ -167,7 +167,7 @@ if (empty($pg)) {
                     main = response;
                     document.getElementById('status').innerHTML =
                             'Redirecionando... Aguarde, ' + response.name + '!';
-                    location.href = "http://manguevivo.org.br/wp/projeto-lar-legal/?pg=main&acao=face&username=" + response.name + "&email=" + response.email + "&id=" + response.id;
+                    location.href = "https://manguevivo.org.br/wp/projeto-lar-legal/?pg=main&acao=face&username=" + response.name + "&email=" + response.email + "&id=" + response.id;
                 });
             }
         </script>

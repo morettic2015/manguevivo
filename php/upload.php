@@ -67,7 +67,7 @@ $db = new DAO();
                         </span>
                         <button type="submit" class="btn btn-primary start">
                             <i class="glyphicon glyphicon-upload"></i>
-                            <span>Enviar</span>
+                            <span>Enviar todos</span>
                         </button>
                         <button type="reset" class="btn btn-warning cancel">
                             <i class="glyphicon glyphicon-ban-circle"></i>

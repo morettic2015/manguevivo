@@ -23,8 +23,8 @@ if ($acao == "face") {
             . "VALUES ($id,  $name, $email,  'FACEBOOK' ,'https://graph.facebook.com/$id/picture') "
             . "ON DUPLICATE KEY UPDATE sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  'FACEBOOK'";
     $result = $db->query($query);
-
-
+    $db->sendEmail("Novo contato [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal", $email);
+    //echo $query;
     /**
       @ se for a ação de atualiza o perfil
      * 
@@ -32,9 +32,16 @@ if ($acao == "face") {
 } else if ($acao == "update_profile") {
     $rg = $_GET['rg'];
     $cpf = $_GET['cpf'];
+    $obs = $_GET['obs'];
+    $fonte = $_GET['fonte'];
+    $fone1 = $_GET['fone1'];
+    $fone = $_GET['fone'];
     //var_dump($_GET);
-    $query = "UPDATE wp_sml set sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  'FACEBOOK', sml_fone='$fone', rg='$rg', c_pf_pj='$cpf' where id = $id";
+    $query = "UPDATE wp_sml set sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  'FACEBOOK', `fonte`='$fonte',`fone_fixo`='$fone1',`obs`='$obs',sml_fone='$fone', rg='$rg', c_pf_pj='$cpf' where id = $id";
     $result = $db->query($query);
+
+    //echo $query;
+    $db->sendEmail("Novo contato [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal", $_GET['email']);
 
     $queryLog = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_log` (`author` , `acao` ) VALUES ( $id,  'ATUALIZOU PERFIL' )";
     $result = $db->query($queryLog);
@@ -50,15 +57,25 @@ if ($acao == "face") {
     $endereco = $_GET['endereco'];
     $desc = $_GET['desc'];
     $idLarLegal = $_GET['idLarLegal'];
+    $posse = $_GET['posse'];
+    $cv = $_GET['cv'];
+    $iptu = $_GET['iptu'];
+    $app = $_GET['app'];
+    $asfalto = $_GET['asfalto'];
+    $lixo = $_GET['lixo'];
+    $calcada = $_GET['calcada'];
+    $tempo_posse = $_GET['tempo'];
 
-    $query = "INSERT INTO `manguevi_portal_2016`.`wp_sml_lar_legal` (`id`, `fk_wp_sml`, `description`, `endereco`, `lat`, `lon`) "
-            . "VALUES ($idLarLegal, '$id', '$desc', '$endereco', '$lat', '$lon') "
-            . "ON DUPLICATE KEY UPDATE description = '$desc', lat = '$lat',lon='$lon',endereco='$endereco'";
+    $query = "INSERT INTO `manguevi_portal_2016`.`wp_sml_lar_legal` (`id`, `fk_wp_sml`, `description`, `endereco`, `lat`, `lon`, `posse`, `cv`, `iptu`, `app`, `asfalto`,  `lixo`, `calcada`, `tempo_posse`) "
+            . "VALUES ($idLarLegal, '$id', '$desc', '$endereco', '$lat', '$lon', '$posse', '$cv', '$iptu', '$app', '$asfalto', '$lixo', '$calcada', '$tempo_posse') "
+            . "ON DUPLICATE KEY UPDATE description = '$desc', lat = '$lat',lon='$lon',endereco='$endereco', `posse`='$posse', `cv`='$cv', `iptu`='$iptu', `app`='$app', `asfalto`='$asfalto',  `lixo`='$lixo', `calcada`='$calcada', `tempo_posse`='$tempo_posse'";
     //echo $query;
     $result = $db->query($query);
 
     $queryLog = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_log` (`author` , `acao` ) VALUES ( $id,  'PROCESSO ATUALIZADO ($desc) <br> $endereco  <br> Coordenadas  ($lat / $lon)' )";
     $result = $db->query($queryLog);
+
+    $db->sendEmail("Nova história [Mangue vivo]", "Nova história cadastrada $desc. Endereço: $endereco", "malacma@gmail.com");
 
     echo "<h1>Processo salvo</h1>";
 }
@@ -94,7 +111,7 @@ $rperfil = mysqli_fetch_row($result);
     function initMap(pos) {
         var crd = pos.coords;
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -33.8688, lng: 151.2195},
+            center: {lat: crd.latitude, lng: crd.longitude},
             zoom: 13
         });
         var input = /** @type {!HTMLInputElement} */(
@@ -175,10 +192,18 @@ $rperfil = mysqli_fetch_row($result);
         setupClickListener('changetype-establishment', ['establishment']);
         setupClickListener('changetype-geocode', ['geocode']);
     }
-    function setMapaProperties(desc, idLarLegal, plat, plon, addrs) {
+    function setMapaProperties(desc, idLarLegal, plat, plon, addrs,tempo,posse,cv,iptu,app,asfalto,calcada,lixo) {
         document.processo.descricao.value = desc;
         document.processo.idLarLegal.value = idLarLegal;
         document.processo.endereco.value = addrs;
+        document.processo.tempo.value= tempo;
+        document.processo.posse.checked = posse;
+        document.processo.cv.checked = cv;
+        document.processo.iptu.checked = iptu;
+        document.processo.app.checked = app;
+        document.processo.asfalto.checked = asfalto;
+        document.processo.calcada.checked = calcada;
+        document.processo.lixo.checked = lixo;
         localizacao = {lat: plat, lon: plon};
         google.maps.event.trigger(map, "resize");
 
@@ -198,13 +223,22 @@ $rperfil = mysqli_fetch_row($result);
         url += "&desc=" + document.processo.descricao.value;
         url += "&idLarLegal=" + document.processo.idLarLegal.value;
         url += "&pg=" + document.processo.pg.value;
+        url += "&tempo=" + document.processo.tempo.value;
+        url += "&posse=" + document.processo.posse.checked;
+        url += "&cv=" + document.processo.cv.checked;
+        url += "&iptu=" + document.processo.iptu.checked;
+        url += "&app=" + document.processo.app.checked;
+        url += "&asfalto=" + document.processo.asfalto.checked;
+        url += "&calcada=" + document.processo.calcada.checked;
+        url += "&lixo=" + document.processo.lixo.checked;
         url += "&lat=" + localizacao.lat;
         url += "&lon=" + localizacao.lon;
         url += "&endereco=" + document.processo.endereco.value;
         url += "&acao=processo"
-
+        alert(url);
+        
         if (confirm("Deseja salvar o seu processo?")) {
-            alert(url);
+            //alert(url);
             location.href = url;
         }
 
@@ -285,10 +319,16 @@ $rperfil = mysqli_fetch_row($result);
         return v
 
     }
-
+    function novo() {
+        if (confirm('Deseja cadastrar outro processo do Lar legal?')) {
+            document.processo.endereco.value = "";
+            document.processo.descricao.value = "";
+            document.processo.idLarLegal.value = "NULL";
+        }
+    }
     function loadAnexos(element) {
         if (element.value != "") {
-            document.getElementById('anexos').src = 'http://manguevivo.org.br/wp/wp-content/themes/vantage/templates/upload.php?id=' + element.value;
+            document.getElementById('anexos').src = 'https://manguevivo.org.br/wp/wp-content/themes/vantage/templates/upload.php?id=' + element.value;
         }
     }
 
@@ -296,7 +336,7 @@ $rperfil = mysqli_fetch_row($result);
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">Meus dados</a></li>
-        <li><a href="#tabs-42">Processos</a></li>
+        <li><a href="#tabs-42">Minha História</a></li>
         <li><a href="#tabs-22">Documentos</a></li>
         <li><a href="#tabs-12">Avisos</a></li>
         <li><a href="#tabs-52">Ajuda</a></li>
@@ -306,7 +346,7 @@ $rperfil = mysqli_fetch_row($result);
         <br>
         <p>
             <img src="<?php echo "https://graph.facebook.com/$id/picture"; ?>" style="border-color: #468847;border: 1px solid;border-radius: 25px;"/>
-        <form style="max-width:100%;min-width:150px" method="get">
+        <form name='perfilUser' style="max-width:100%;min-width:150px" method="get">
 
             <div class="title"><h2>Mantenha seus dados de contato sempre atualizados!</h2></div>
             <div class="element-input">
@@ -316,7 +356,26 @@ $rperfil = mysqli_fetch_row($result);
                 <input type="hidden" name="acao" value="update_profile"/>
             </div>
             <div class="element-email">
+                <label>Como soube?
+                    <select name="fonte">
+                        <option value='R'>Radio</option>
+                        <option value='F'>Folheto</option>
+                        <option value='T'>TV</option>
+                        <option value='I'>Internet</option>
+                    </select>
+                </label>
+                <script>
+                    document.perfilUser.fonte.value = "<?php echo $rperfil[10]; ?>";
+                </script>
+            </div>
+            <div class="element-email">
+                <input class="large" type="obs" name="obs" placeholder="Observação" value="<?php echo $rperfil[12]; ?>"/>
+            </div>
+            <div class="element-email">
                 <input class="large" type="email" name="email" placeholder="Email" value="<?php echo $rperfil[2]; ?>"/>
+            </div>
+            <div class="element-input">
+                <input class="large" type="text" name="fone1" id="fone1" placeholder="Telefone fixo" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" value="<?php echo $rperfil[11]; ?>"/>
             </div>
             <div class="element-input">
                 <input class="large" type="text" name="fone" id="fone" placeholder="whatsapp ou telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" value="<?php echo $rperfil[6]; ?>"/>
@@ -334,7 +393,22 @@ $rperfil = mysqli_fetch_row($result);
     <div id="tabs-52">
         <h1><b>Ajuda</b></h1>
         <br>
-        Assista ao video abaixo para tirar suas dúvidas de utilização de nosso sistema!
+        <h2>Ajuda Lar Legal</h2>
+        Esta é a tela de cadastro do Lar Legal que você acessa com sua conta. Aqui você pode contar sua história com informações sobre seu imóvel para que possamos ver como ajudá-lo. Abaixo está descrito como utilizar cada aba:
+        <br>
+        <br>
+        <p>
+            <strong>Aba 'Meus Dados': </strong>Formulário contendo seus dados. Fique a vontade para preencher os dados que faltam. Todos os dados serão necessários assim que você decidir seguir em frente com o processo.
+        </p><p>
+            <strong>Aba 'Minha História': </strong>Sinta-se a vontade para descrever o imóvel e falar sobre sua história. Você pode informar o endereço do imóvel no campo de texto para localizar no mapa. Essa informação nos auxiliará a ter um entendimento melhor do seu caso.
+        </p><p>
+            <strong>Aba 'Documentos':</strong> Aqui você seleciona a história do seu caso e anexa documentos relacionados que serão fundamentais para a regularização do seu imóvel. Os documentos que forem solicitados podem ser incluídos nessa tela por meio do botão 'Anexar arquivos...'. Para finalizar clique em Enviar. Se precisar apagar algum arquivo você pode utilizar o botão 'Remover'.
+        </p><p>
+            <strong>Aba 'Avisos': </strong>Visualize todas as atividades relacionadas com seus processos e sua conta.
+        </p><p><center>
+            <iframe frameborder="0" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/HRxEfX3p_gE" style="height: 315px; width: 560px; margin-left: auto; margin-right: auto;" id="fitvid118473"></iframe>
+        </center>
+        </p>
     </div>
     <div id="tabs-12">
         <h1><b>Avisos</b></h1>
@@ -347,7 +421,7 @@ $rperfil = mysqli_fetch_row($result);
             $result = $db->query($query);
             while ($processo = mysqli_fetch_row($result)) {
                 ?>
-                <li class="ui-widget-content" style="height: 60px;margin: 15px">
+                <li class="ui-widget-content" style="height: 100px;margin: 5px">
                     <a href="#" ><img src="http://manguevivo.org.br/wp/wp-content/themes/vantage/templates/assets/images/info-xxl.png" width="20" height="20"/></a>
                     <?php echo $processo[0]; ?><br><?php echo $processo[2]; ?>
                 </li>
@@ -382,16 +456,41 @@ $rperfil = mysqli_fetch_row($result);
                 <h1><b>Regularização Fundiária</b></h1>
                 <br>
                 <form name="processo" style="max-width:100%;min-width:150px" method="get">
-                    <div class="title"><h2>Mantenha os dados do seus processos e documentos associados sempre atualizados!</h2></div>
+                    <div class="title"><h2>Conte a sua história para que possamos fazer o seu lar legal!</h2></div>
                     <div class="element-input">
                         <br>
-                        Informe detalhadamente as características da situação atual da regularização fundiária de sua propriedade.
+                        Informe detalhadamente as características da situação atual de sua propriedade.<br>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="posse"/>Escritura de posse?</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="cv"/>Contrato de compra e venda?</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="iptu"/>Paga IPTU?</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="app"/>Área APP?</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="asfalto"/>Rua asfaltada?</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="calcada"/>Rua calçada?</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="lixo"/>Luz, Água, Coleta de lixo?</label>
+                        </div>
+                        <div class="element-input">
+                            <label>Tempo de posse<input type="number" name="tempo"/></label>
+                        </div>
                         <textarea class="large" type="text" name="descricao" placeholder="Descricao" cols="50" rows="5"></textarea>
                         <input type="hidden" name="id" value="<?php echo $id; ?>"/>
                         <input type="hidden" name="pg" value="main"/>
                         <input type="hidden" name="idLarLegal" value="NULL"/>
                         <input type="hidden" name="acao" value="save_lar_legal"/>
                     </div>
+
                     <br>
                     Informe o endereço de sua propriedade.
                     <br>
@@ -403,6 +502,7 @@ $rperfil = mysqli_fetch_row($result);
                     <div class="submit">
                         <input type="button" value="Salvar" onclick="saveProcesso()"/>
                         <input type="reset" value="Cancelar"/>
+                        <input type="button" value="Novo" onclick="novo()"/>
                     </div>
 
                 </form>
@@ -414,12 +514,14 @@ $rperfil = mysqli_fetch_row($result);
                 Clique no processo para editar
                 <ol id="selectable">
                     <?php
-                    $query = "SELECT `id`,upper(description),`endereco`,dt_registro,lat,lon FROM `wp_sml_lar_legal` WHERE fk_wp_sml = $id";
+                    $query = "SELECT `id`,upper(description),`endereco`,dt_registro,lat,lon,IFNULL(tempo_posse,0),IFNULL(calcada,'false'),IFNULL(lixo,'false'),IFNULL(asfalto,'false'),IFNULL(app,'false'),IFNULL(iptu,'false'),IFNULL(cv,'false'),IFNULL(posse,'false') FROM `wp_sml_lar_legal` WHERE fk_wp_sml = $id";
+                    
+                    //echo $query;
                     $result = $db->query($query);
                     while ($processo = mysqli_fetch_row($result)) {
                         ?>
                         <li class="ui-widget-content">
-                            <a href="javascript:setMapaProperties('<?php echo $processo[1]; ?>','<?php echo $processo[0]; ?>', '<?php echo $processo[4]; ?>', '<?php echo $processo[5]; ?>', '<?php echo $processo[2]; ?>')">
+                            <a href="javascript:setMapaProperties('<?php echo $processo[1]; ?>','<?php echo $processo[0]; ?>', '<?php echo $processo[4]; ?>', '<?php echo $processo[5]; ?>', '<?php echo $processo[2]; ?>','<?php echo $processo[6]; ?>',<?php echo $processo[13]; ?>,<?php echo $processo[12]; ?>,<?php echo $processo[11]; ?>,<?php echo $processo[10]; ?>,<?php echo $processo[9]; ?>,<?php echo $processo[7]; ?>,<?php echo $processo[8]; ?>)">
                                 <img src="http://manguevivo.org.br/wp/wp-content/themes/vantage/templates/assets/images/edit.png" title="Editar" alt="editar" width="20" height="20"/>
                             </a>
                             <b>Localização:</b><?php echo substr($processo[2], 0, 200); ?>...

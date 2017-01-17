@@ -93,6 +93,12 @@ class DAO {
         return "'" . $connection->real_escape_string($value) . "'";
     }
 
+    public function sendEmail($subject, $msg, $from) {
+        $admin_email = "contato@manguevivo.org.br,".$from;
+        //send email
+        mail($admin_email, $subject, $msg, "From:contato@manguevivo.org.br");
+    }
+
 }
 
 ?>
