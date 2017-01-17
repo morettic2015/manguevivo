@@ -23,7 +23,7 @@ if ($acao == "face") {
             . "VALUES ($id,  $name, $email,  'FACEBOOK' ,'https://graph.facebook.com/$id/picture') "
             . "ON DUPLICATE KEY UPDATE sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  'FACEBOOK'";
     $result = $db->query($query);
-    $db->sendEmail("Novo contato [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal", $email);
+    $db->sendEmail("Novo contato [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal \\n http://www.manguevivo.org.br", $email);
     //echo $query;
     /**
       @ se for a ação de atualiza o perfil
@@ -41,7 +41,7 @@ if ($acao == "face") {
     $result = $db->query($query);
 
     //echo $query;
-    $db->sendEmail("Novo contato [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal", $_GET['email']);
+    $db->sendEmail("Contato atualizado [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal \\n http://www.manguevivo.org.br", $_GET['email']);
 
     $queryLog = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_log` (`author` , `acao` ) VALUES ( $id,  'ATUALIZOU PERFIL' )";
     $result = $db->query($queryLog);
@@ -235,7 +235,7 @@ $rperfil = mysqli_fetch_row($result);
         url += "&lon=" + localizacao.lon;
         url += "&endereco=" + document.processo.endereco.value;
         url += "&acao=processo"
-        alert(url);
+       // alert(url);
         
         if (confirm("Deseja salvar o seu processo?")) {
             //alert(url);
