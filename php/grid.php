@@ -26,7 +26,63 @@
             var idLarLegal = null;
             function setProcesso(valvlue) {
                 idLarLegal = valvlue;
-                alert(idLarLegal);
+                //alert(idLarLegal);
+            }
+            var checkMarked = null;
+            var idLead = null;
+            function setLead(valvlue) {
+                checkMarked = valvlue;
+                idLead = checkMarked.value;
+                // alert(idLead);
+            }
+            function loadUpload() {
+                loadUrl("popupload");
+            }
+            function loadMessage() {
+                loadUrl("message");
+            }
+            function loadHistory() {
+                loadUrl("history");
+            }
+            function loadProcess() {
+                if (isNaN(idLead)) {
+                    alert('Selecione um lead');
+                    return;
+                } else if (idLead == "") {
+                    alert('Selecione um lead');
+                    return;
+                } else if (idLead == null) {
+                    alert('Selecione um lead');
+                    return;
+                }
+                this.location.href = "https://manguevivo.org.br/wp/wp-content/themes/vantage/process.php?id=NULL&lead=" + idLead;
+            }
+            function editProcess() {
+                if (isNaN(idLarLegal)) {
+                    alert('Selecione um processo');
+                    return;
+                } else if (idLarLegal == "") {
+                    alert('Selecione um processo');
+                    return;
+                } else if (idLarLegal == null) {
+                    alert('Selecione um processo');
+                    return;
+                }
+                this.location.href = "https://manguevivo.org.br/wp/wp-content/themes/vantage/process.php?id=" + idLarLegal;
+            }
+
+            function loadUrl(url) {
+                if (isNaN(idLarLegal)) {
+                    alert('Selecione um processo');
+                    return;
+                } else if (idLarLegal == "") {
+                    alert('Selecione um processo');
+                    return;
+                } else if (idLarLegal == null) {
+                    alert('Selecione um processo');
+                    return;
+                }
+                this.location.href = "../wp-content/themes/vantage/" + url + ".php?id=" + idLarLegal;
             }
         </script>
     </head>
@@ -41,21 +97,26 @@
 
 
 
-
-                <a href="#popupMenu<?php echo $i; ?>" data-rel="popup" data-transition="slideup" style="margin: 30px"class="ui-btn ui-icon-gear ui-btn-icon-left">Gerenciar</a>
+                <a href="#popupMenu<?php echo $i; ?>" data-rel="popup" data-transition="slideup" style="margin: 60px"class="ui-btn ui-icon-gear ui-btn-icon-left">Gerenciar</a>
                 <div data-role="popup" id="popupMenu<?php echo $i; ?>">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="list-divider">Selecione uma ação</li>
-                        <li><a href="#" >Editar processo</a></li>
-                        <li><a href="#">Enviar mensagem</a></li>
-                        <li><a href="#"  data-transition="slidedown">Anexar documento</a></li>
-                        <li><a href="#"  data-transition="slidedown">Histórico de ações</a></li>
-                        <li> <a href="../wp-content/themes/vantage/profile.php?id=NULL">Novo contato</a></li>
-                        <li> <a href="../wp-content/themes/vantage/profile.php?id=NULL">Novo processo</a></li>
+                        <li> <a href="../wp-content/themes/vantage/profile.php?id=NULL"  data-transition="slidedown">Novo contato</a></li>
+                        <li> <a href="javascript:loadProcess()"  data-transition="slidedown">Novo processo</a></li>
+                        <li><a href="javascript:editProcess()"  data-transition="slidedown">Editar processo</a></li>
+                        <li><a href="javascript:loadUpload()"  data-transition="slidedown">Anexar documento</a></li>
+                        <li><a href="javascript:loadMessage()"  data-transition="slidedown">Enviar mensagem</a></li>
+                        <li><a href="javascript:loadHistory()"   data-transition="slidedown">Histórico de ações</a></li>
                     </ul>
                 </div>
 
+                <form action="http://manguevivo.org.br/wp/wp-admin/admin.php?" method="GET" data-ajax="false"  >
 
+                    <label>Nome ou email do Lead <input type="text" name="leadName" value="<?php echo $_GET['leadName']; ?>"/></label>
+                    <input type="hidden" name="page" value="lar_legal_morettic_com_br"/>
+                    <input type="submit" value="Pesquisar"/>
+
+                </form>
                 <div class="ui-grid-b ui-responsive" >
                     <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:20px;">Nome</div></div>
                     <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:20px">Email</div></div>
@@ -64,10 +125,13 @@
                 </div><!-- /grid-c -->
                 <?php
                 include '/home/manguevi/public_html/wp/wp-content/themes/vantage/templates/src/DAO.php';
-
+                $where = "";
+                if (isset($_GET['leadName'])) {
+                    $where = "and (sml_name like '%" . $_GET['leadName'] . "%' or sml_email like '%" . $_GET['leadName'] . "%')";
+                }
                 //Dao
                 $db = new DAO();
-                $query = "SELECT id, UPPER( sml_name ) AS nm, UPPER( sml_email ) AS mail, sml_avatar_url FROM  `wp_sml` WHERE intouch =0 ORDER BY sml_name ASC";
+                $query = "SELECT id, UPPER( sml_name ) AS nm, UPPER( sml_email ) AS mail, sml_avatar_url FROM  `wp_sml` WHERE intouch =0 $where ORDER BY sml_name ASC";
 
                 $result = $db->query($query);
                 $i = 0;
@@ -78,13 +142,14 @@
                     <div class="ui-grid-b ui-responsive" >
                         <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:110px" align="center">
                                 <img src="<?php echo $processo[3]; ?>" style="border-radius: 25px;">
-                                <br><a data-ajax="false"  href="../wp-content/themes/vantage/profile.php?id=<?php echo $processo[0]; ?>" class="ui-btn ui-corner-all ui-icon-edit ui-btn-icon-right" data-transition="slidedown"><?php echo $processo[1]; ?></a>
+                                <br>
+                                <a data-ajax="false"  href="../wp-content/themes/vantage/profile.php?id=<?php echo $processo[0]; ?>" class="ui-btn ui-corner-all ui-icon-edit ui-btn-icon-right" data-transition="slidedown"><?php echo $processo[1]; ?></a>
                             </div>
                         </div>
-                        <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:110px" align="center"><bt><?php echo $processo[2]; ?></div></div>
+                        <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:110px" align="center"><br><?php echo $processo[2]; ?><br><br><label>Selecionar<input type="radio" name="chm" value="<?php echo $processo[0]; ?>" onclick="setLead(this)"/></label></div></div>
                         <div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:110px">
                                 <div class="ui-field-contain">
-                                    <select name="select-native-1" id="select-native-1" onclick="onblur(this.value)">
+                                    <select name="select-native-1" id="select-native-1" onclick="setProcesso(this.value)">
                                         <?php
                                         $query1 = "SELECT  id, UPPER( description ) , UPPER( endereco )  FROM `wp_sml_lar_legal` where fk_wp_sml = '$processo[0]' group by id";
                                         echo $query1;
