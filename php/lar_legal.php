@@ -81,9 +81,7 @@ if (empty($pg)) {
     ?>
 
     <center>
-        <h1>
-            Utilize sua conta do Facebook para entrar no seu processo de regularização fundi&aacute;ria!
-        </h1>
+
 
 
         <script>
@@ -171,19 +169,70 @@ if (empty($pg)) {
                 });
             }
         </script>
-
+        <div id = "dialog-1" title = "Registrar-se">
+            <label>Nome :<br>
+                <input id="cadNome" name="nome" type="text">
+            </label>
+            <br>
+            <label>Email:<br>
+                <input id="cadEmail" name="cadEmail" type="text">
+            </label>
+            <br>
+            <input id="btRegister" name="btRegister" type="button" value="Criar conta" onclick="saveProfile()">
+        </div>
         <!--
           Below we include the Login Button social plugin. This button uses
           the JavaScript SDK to present a graphical Login button that triggers
           the FB.login() function when clicked.
         -->
+        <?php get_template_part('content', 'page'); ?>
+        <script>
+            document.getElementById('login').onclick = function () {
+                var email = document.getElementById('email').value;
+                var passw = document.getElementById('password').value;
+                url = "../wp-content/themes/vantage/templates/login_controller.php?demail=" + email + "&action=login&password=" + passw + "";
+                $.getJSON(url, function (jd) {
+                    if (jd.status == 200) {
+                        window.location.href = 'https://manguevivo.org.br/wp/projeto-lar-legal/?pg=main&acao=face&username=' + jd.name + '&email=' + jd.email + '&id=' + jd.id + '';
+                    } else {
+                        alert('Usuário ou senha inválidos.')
+                    }
+                });
+            }
+            function saveProfile(){
+                var email = document.getElementById('cadEmail').value;
+                var nome = document.getElementById('cadNome').value;
+                url = "../wp-content/themes/vantage/templates/login_controller.php?demail="+email+"&action=add&&name="+nome;
+                $.getJSON(url, function (jd) {
+                    if (jd.status == 200) {
+                        alert('Cadastro realizado com sucesso. Sua senha foi enviada por email.');
+                    } else {
+                        alert('Email já existente.');
+                    }
+                });
+            }
+            
+            function cadUser() {
+                $("#dialog-1").dialog("open");
+            }
+            function lostPass() {
+                var email = prompt('Digite seu email cadastrado no mangue vivo');
+                url = "../wp-content/themes/vantage/templates/login_controller.php?demail=" + email + "&action=lost";
+                $.getJSON(url, function (jd) {
+                    if (jd.status == 200) {
+                        alert('Sua nova senha foi enviada por email.')
+                    }else{
+                        alert('Email não encontrado.')
+                    }
+                });
+            }
 
-        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-        </fb:login-button>
-        <div id="status">
-        </div>
-        <?php get_template_part( 'content', 'page' ); ?>
+            $("#dialog-1").dialog({
+                autoOpen: false,
+            });
+        </script>
     </center>
+
     <?php
 } else {
     /*   //Lib facebook
