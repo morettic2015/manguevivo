@@ -29,6 +29,39 @@ if ($acao == "face") {
       @ se for a ação de atualiza o perfil
      * 
      *  */
+} else if ($acao == "prefeitura") {
+    $nmPrefeitura = $_GET['nmPrefeitura'];
+    $donoArea = $_GET['donoArea'];
+    $intSocial = isset($_GET['intSocial']) ? '1' : '0';
+    $oscipPar = isset($_GET['oscipPar']) ? '1' : '0';
+    $siconv = $_GET['siconv'];
+    $totalImoveis = $_GET['totalImoveis'] == "" ? "0" : $_GET['totalImoveis'];
+    $secHabit = isset($_GET['secHabit']) ? '1' : '0';
+    $id = $_GET['id'];
+    $query = "INSERT INTO `wp_sml_prefeitura`("
+            . "`fk_wp_sml`, "
+            . "`wp_sml_dono`, "
+            . "`wp_sml_interesse`, "
+            . "`wp_sml_p_oscip`, "
+            . "`wp_sml_sincov`, "
+            . "`wp_sml_total`, "
+            . "`wp_sml_sec_hab`, "
+            . "`wp_sml_prefeitura`) VALUES ($id,'$donoArea','$intSocial','$oscipPar','$siconv','$totalImoveis','$secHabit','$nmPrefeitura')"
+            . "ON DUPLICATE KEY UPDATE "
+            . "wp_sml_dono =  '$donoArea',"
+            . "wp_sml_interesse =  '$intSocial',"
+            . "wp_sml_p_oscip =  '$oscipPar',"
+            . "wp_sml_sincov =  '$siconv',"
+            . "wp_sml_total =  '$totalImoveis',"
+            . "wp_sml_sec_hab =  '$secHabit',"
+            . "wp_sml_prefeitura =  '$nmPrefeitura'";
+    $result = $db->query($query);
+    $queryLog = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_log` (`author` , `acao` ) VALUES ( $id,  'DADOS DA PREFEITURA ATUALIZADOS' )";
+    $result = $db->query($queryLog);
+
+    //echo $query;
+
+    echo "<h1>Dados do município atualizados com sucesso</h1>";
 } else if ($acao == "update_profile") {
     $rg = $_GET['rg'];
     $cpf = $_GET['cpf'];
@@ -36,8 +69,9 @@ if ($acao == "face") {
     $fonte = $_GET['fonte'];
     $fone1 = $_GET['fone1'];
     $fone = $_GET['fone'];
+    $ehPrefeitura = empty($_GET['ehPrefeitura']) ? 'LAR_LEGAL' : 'PREFEITURA';
     //var_dump($_GET);
-    $query = "UPDATE wp_sml set sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  'FACEBOOK', `fonte`='$fonte',`fone_fixo`='$fone1',`obs`='$obs',sml_fone='$fone', rg='$rg', c_pf_pj='$cpf' where id = $id";
+    $query = "UPDATE wp_sml set sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  '$ehPrefeitura', `fonte`='$fonte',`fone_fixo`='$fone1',`obs`='$obs',sml_fone='$fone', rg='$rg', c_pf_pj='$cpf' where id = $id";
     $result = $db->query($query);
 
     //echo $query;
@@ -65,17 +99,28 @@ if ($acao == "face") {
     $lixo = $_GET['lixo'];
     $calcada = $_GET['calcada'];
     $tempo_posse = $_GET['tempo'];
+    $esc_publica = $_GET['esc_publica'];
+    $habitese = $_GET['habitese'];
+    $ant_2014 = $_GET['ant_2014'];
+    $menor_120 = $_GET['menor_120'];
+    $projeto = $_GET['projeto'];
+    $iptu_prop = $_GET['iptu_prop'];
 
-    $query = "INSERT INTO `manguevi_portal_2016`.`wp_sml_lar_legal` (`id`, `fk_wp_sml`, `description`, `endereco`, `lat`, `lon`, `posse`, `cv`, `iptu`, `app`, `asfalto`,  `lixo`, `calcada`, `tempo_posse`) "
-            . "VALUES ($idLarLegal, '$id', '$desc', '$endereco', '$lat', '$lon', '$posse', '$cv', '$iptu', '$app', '$asfalto', '$lixo', '$calcada', '$tempo_posse') "
-            . "ON DUPLICATE KEY UPDATE description = '$desc', lat = '$lat',lon='$lon',endereco='$endereco', `posse`='$posse', `cv`='$cv', `iptu`='$iptu', `app`='$app', `asfalto`='$asfalto',  `lixo`='$lixo', `calcada`='$calcada', `tempo_posse`='$tempo_posse'";
+
+    $query = "INSERT INTO `manguevi_portal_2016`.`wp_sml_lar_legal` (`id`, `fk_wp_sml`, `description`, `endereco`, `lat`, `lon`, `posse`, `cv`, "
+            . "`iptu`, `app`, `asfalto`,  `lixo`, `calcada`, `tempo_posse`, `esc_publica`, `habitese`, `ant_2014`, `menor_120`, `projeto`, `iptu_prop`) "
+            . "VALUES ($idLarLegal, '$id', '$desc', '$endereco', '$lat', '$lon', '$posse', '$cv', '$iptu', '$app', '$asfalto', '$lixo', '$calcada', '$tempo_posse'"
+            . ", $esc_publica, '$habitese',$ant_2014, $menor_120, $projeto, $iptu_prop) "
+            . "ON DUPLICATE KEY UPDATE description = '$desc', lat = '$lat',lon='$lon',endereco='$endereco',"
+            . " `posse`='$posse', `cv`='$cv', `iptu`='$iptu', `app`='$app', `asfalto`='$asfalto',  `lixo`='$lixo', `calcada`='$calcada', `tempo_posse`='$tempo_posse',"
+            . " `esc_publica`=$esc_publica, `habitese`='$habitese', `ant_2014`=$ant_2014, `menor_120`=$menor_120,  `projeto`=$projeto, `iptu_prop`=$iptu_prop";
     //echo $query;
     $result = $db->query($query);
 
     $queryLog = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_log` (`author` , `acao` ) VALUES ( $id,  'PROCESSO ATUALIZADO ($desc) <br> $endereco  <br> Coordenadas  ($lat / $lon)' )";
     $result = $db->query($queryLog);
 
-    $db->sendEmail("Nova história [Mangue vivo]", "Nova história cadastrada $desc. Endereço: $endereco", "malacma@gmail.com");
+    $db->sendEmail("Nova história [Mangue vivo]", "Nova história cadastrada $desc. Endereço: $endereco", "contatos@manguevivo.org.br");
 
     echo "<h1>Processo salvo</h1>";
 }
@@ -192,11 +237,11 @@ $rperfil = mysqli_fetch_row($result);
         setupClickListener('changetype-establishment', ['establishment']);
         setupClickListener('changetype-geocode', ['geocode']);
     }
-    function setMapaProperties(desc, idLarLegal, plat, plon, addrs,tempo,posse,cv,iptu,app,asfalto,calcada,lixo) {
+    function setMapaProperties(desc, idLarLegal, plat, plon, addrs, tempo, posse, cv, iptu, app, asfalto, calcada, lixo, esc_publica, habitese, ant_2014, menor_120, projeto, iptu_prop) {
         document.processo.descricao.value = desc;
         document.processo.idLarLegal.value = idLarLegal;
         document.processo.endereco.value = addrs;
-        document.processo.tempo.value= tempo;
+        document.processo.tempo.value = tempo;
         document.processo.posse.checked = posse;
         document.processo.cv.checked = cv;
         document.processo.iptu.checked = iptu;
@@ -204,7 +249,20 @@ $rperfil = mysqli_fetch_row($result);
         document.processo.asfalto.checked = asfalto;
         document.processo.calcada.checked = calcada;
         document.processo.lixo.checked = lixo;
+        document.processo.esc_publica.checked = esc_publica;
+        document.processo.habitese.value = habitese;
+        document.processo.ant_2014.checked = ant_2014;
+        document.processo.menor_120.checked = menor_120;
+        document.processo.projeto.checked = projeto;
+        document.processo.iptu_prop.checked = iptu_prop;
         localizacao = {lat: plat, lon: plon};
+        //alert('ha'+habitese);
+        if (habitese == "h") {
+            showHideHabit(true);
+        } else {
+            showHideHabit(false);
+        }
+
         google.maps.event.trigger(map, "resize");
 
         var m1 = new google.maps.Marker({
@@ -234,9 +292,15 @@ $rperfil = mysqli_fetch_row($result);
         url += "&lat=" + localizacao.lat;
         url += "&lon=" + localizacao.lon;
         url += "&endereco=" + document.processo.endereco.value;
-        url += "&acao=processo"
-       // alert(url);
-        
+        url += "&esc_publica=" + document.processo.esc_publica.checked;
+        url += "&habitese=" + document.processo.habitese.value;
+        url += "&ant_2014=" + document.processo.ant_2014.checked;
+        url += "&menor_120=" + document.processo.menor_120.checked;
+        url += "&projeto=" + document.processo.projeto.checked;
+        url += "&iptu_prop=" + document.processo.iptu_prop.checked;
+        url += "&acao=processo";
+        // alert(url);
+
         if (confirm("Deseja salvar o seu processo?")) {
             //alert(url);
             location.href = url;
@@ -332,15 +396,102 @@ $rperfil = mysqli_fetch_row($result);
         }
     }
 
+    function showHideHabit(v) {
+        if (v) {
+            $("#frmLarLegal").hide();
+            $("#frmHabitese").show();
+        } else {
+            $("#frmHabitese").hide();
+            $("#frmLarLegal").show();
+        }
+
+    }
+
 </script>
 <div id="tabs">
     <ul>
-        <li><a href="#tabs-1">Meus dados</a></li>
+        <li><a href="#tabs-1">Perfil</a></li>
+        <li><a id="tabPrefeitura1" href="#tabs-23">Prefeitura</a></li>
         <li><a href="#tabs-42">Minha História</a></li>
         <li><a href="#tabs-22">Documentos</a></li>
         <li><a href="#tabs-12">Avisos</a></li>
         <li><a href="#tabs-52">Ajuda</a></li>
     </ul>
+    <div id="tabs-23">
+        <?php
+        $query1 = "SELECT * FROM `wp_sml_prefeitura` WHERE fk_wp_sml = $id";
+        $result1 = $db->query($query1);
+        //echo $query1;
+
+        $prefeitura = mysqli_fetch_row($result1);
+
+        //var_dump($prefeitura);
+        ?>
+        <h1><b>Prefeitura</b></h1>
+        <br>
+        <h2>Dados de seu município</h2>
+        Esta é a tela de cadastro do Lar Legal Prefeitura. Aqui você pode contar um pouco das características de seu município:
+        <br>
+        <br>
+        <form name='prefeitura' style="max-width:100%;min-width:150px" method="get">
+            <input type="hidden" name="id" value="<?php echo $id; ?>"/>
+            <input type="hidden" name="pg" value="main"/>
+            <input type="hidden" name="acao" value="prefeitura"/>
+            <div class="element-input">
+                <label> Prefeitura de:
+                    <input class="large" type="text" name="nmPrefeitura" placeholder="Nome da prefeitura" value="<?php echo $prefeitura[7]; ?>"/>
+                </label>
+            </div>
+            <div class="element-email">
+                <label>As áreas a serem regularizadas pertencem:
+                    <select name="donoArea">
+                        <option>Selecione</option>
+                        <option value='U'>União</option>
+                        <option value='E'>Estado</option>
+                        <option value='M'>Município</option>
+                        <option value='P'>Particular</option>
+                    </select>
+                </label>
+            </div>
+            <div class="element-input">
+                <label>
+                    <input type="checkbox" name="intSocial"/> O Município tem área de interesse social
+                </label>
+            </div>
+            <div class="element-input">
+                <label>
+                    <input type="checkbox" name="oscipPar"/> O Município já realiza parceria com OSCIPS
+                </label>
+            </div>
+            <div class="element-input">
+                <label> Cadastro no siconv:
+                    <input class="large" type="siconv" name="siconv" placeholder="Cadastro no siconv" value="<?php echo $prefeitura[4]; ?>"/>
+                </label>
+            </div>
+            <div class="element-input">
+                <label>Total de Imóveis a serem regularizados:
+                    <select name="totalImoveis">
+                        <option value='1000'>até 1000</option>
+                        <option value='9999'>mais de 1000</option>
+                    </select>
+                </label>
+
+            </div>
+            <div class="element-input">
+                <label>
+                    <input type="checkbox" name="secHabit"/>O Município tem secretaria de habitação
+                </label>
+            </div>
+            <div class="submit"><input type="submit" value="Salvar"/></div>
+            <script>
+                document.prefeitura.donoArea.value = '<?php echo $prefeitura[1]; ?>';
+                document.prefeitura.totalImoveis.value = '<?php echo $prefeitura[5]; ?>';
+                document.prefeitura.secHabit.checked = <?php echo $prefeitura[6] == "1" ? "true" : "false"; ?>;
+                document.prefeitura.oscipPar.checked = <?php echo $prefeitura[3] == "1" ? "true" : "false"; ?>;
+                document.prefeitura.intSocial.checked = <?php echo $prefeitura[2] == "1" ? "true" : "false"; ?>;
+            </script>
+        </form>
+    </div>
     <div id="tabs-1">
         <h1><b>Meus dados</b></h1>
         <br>
@@ -349,6 +500,11 @@ $rperfil = mysqli_fetch_row($result);
         <form name='perfilUser' style="max-width:100%;min-width:150px" method="get">
 
             <div class="title"><h2>Mantenha seus dados de contato sempre atualizados!</h2></div>
+            <div class="element-input">
+                <label>
+                    <input type="checkbox" name="ehPrefeitura"/> Represento uma prefeitura
+                </label>
+            </div>
             <div class="element-input">
                 <input class="large" type="text" name="username" placeholder="Nome" value="<?php echo $rperfil[1]; ?>"/>
                 <input type="hidden" name="id" value="<?php echo $id; ?>"/>
@@ -366,6 +522,12 @@ $rperfil = mysqli_fetch_row($result);
                 </label>
                 <script>
                     document.perfilUser.fonte.value = "<?php echo $rperfil[10]; ?>";
+                    document.perfilUser.ehPrefeitura.checked = <?php echo $rperfil[5] == "PREFEITURA" ? 'true' : 'false'; ?>;
+                    if (document.perfilUser.ehPrefeitura.checked==true) {
+                        $("#tabPrefeitura1").show();
+                    } else {
+                        $("#tabPrefeitura1").hide();
+                    }
                 </script>
             </div>
             <div class="element-email">
@@ -399,12 +561,16 @@ $rperfil = mysqli_fetch_row($result);
         <br>
         <p>
             <strong>Aba 'Meus Dados': </strong>Formulário contendo seus dados. Fique a vontade para preencher os dados que faltam. Todos os dados serão necessários assim que você decidir seguir em frente com o processo.
+        </p> <p>
+            <strong>Aba 'Prefeitura': </strong>Para as prefeituras informarem seus dados e características de seu zoneamento
         </p><p>
             <strong>Aba 'Minha História': </strong>Sinta-se a vontade para descrever o imóvel e falar sobre sua história. Você pode informar o endereço do imóvel no campo de texto para localizar no mapa. Essa informação nos auxiliará a ter um entendimento melhor do seu caso.
         </p><p>
             <strong>Aba 'Documentos':</strong> Aqui você seleciona a história do seu caso e anexa documentos relacionados que serão fundamentais para a regularização do seu imóvel. Os documentos que forem solicitados podem ser incluídos nessa tela por meio do botão 'Anexar arquivos...'. Para finalizar clique em Enviar. Se precisar apagar algum arquivo você pode utilizar o botão 'Remover'.
         </p><p>
             <strong>Aba 'Avisos': </strong>Visualize todas as atividades relacionadas com seus processos e sua conta.
+        </p><p>
+            <strong>Aba 'Habite-se': </strong>Para os moradores de Florianópolis que tem um imóvel com escritura pública mas nao regularizou a construçao.
         </p><p><center>
             <iframe frameborder="0" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/HRxEfX3p_gE" style="height: 315px; width: 560px; margin-left: auto; margin-right: auto;" id="fitvid118473"></iframe>
         </center>
@@ -455,9 +621,37 @@ $rperfil = mysqli_fetch_row($result);
             <div data-role="header">
                 <h1><b>Regularização Fundiária</b></h1>
                 <br>
+
                 <form name="processo" style="max-width:100%;min-width:150px" method="get">
-                    <div class="title"><h2>Conte a sua história para que possamos fazer o seu lar legal!</h2></div>
+                    <div class="title">
+                        <h2>Conte a sua história para que possamos fazer o seu lar legal ou habite-se!</h2>
+                        <small>**Habite-se apenas para Florianópolis</small>
+                    </div>
                     <div class="element-input">
+                        <label><input type="radio" name="habitese" value="h" onclick="showHideHabit(true)"/>Habite-se</label>
+                        <label><input type="radio" name="habitese" value="l" checked="true" onclick="showHideHabit(false)"/>Lar legal</label>
+                    </div>
+                    <br>
+                    <div id="frmHabitese" class="element-input">
+                        Dados para o habite-se
+                        <div class="element-input">
+                            <label><input type="checkbox" name="esc_publica"/>O Imóvel tem escritura publica;?</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="ant_2014"/>A Construção é anterior a 2014;</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="menor_120"/>A Construção tem ate 120 mt²;</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="projeto"/>Existe Projeto aprovado;</label>
+                        </div>
+                        <div class="element-input">
+                            <label><input type="checkbox" name="iptu_prop"/>O IPTU esta no nome do proprietário;?</label>
+                        </div>
+                    </div>
+
+                    <div id="frmLarLegal" class="element-input">
                         <br>
                         Informe detalhadamente as características da situação atual de sua propriedade.<br>
                         <div class="element-input">
@@ -484,13 +678,15 @@ $rperfil = mysqli_fetch_row($result);
                         <div class="element-input">
                             <label>Tempo de posse<input type="number" name="tempo"/></label>
                         </div>
-                        <textarea class="large" type="text" name="descricao" placeholder="Descricao" cols="50" rows="5"></textarea>
+
                         <input type="hidden" name="id" value="<?php echo $id; ?>"/>
                         <input type="hidden" name="pg" value="main"/>
                         <input type="hidden" name="idLarLegal" value="NULL"/>
                         <input type="hidden" name="acao" value="save_lar_legal"/>
                     </div>
-
+                    <div  class="element-input">
+                        <textarea class="large" type="text" name="descricao" placeholder="Descricao" cols="40" rows="5"></textarea>
+                    </div>
                     <br>
                     Informe o endereço de sua propriedade.
                     <br>
@@ -504,7 +700,9 @@ $rperfil = mysqli_fetch_row($result);
                         <input type="reset" value="Cancelar"/>
                         <input type="button" value="Novo" onclick="novo()"/>
                     </div>
-
+                    <script>
+                        showHideHabit(false);
+                    </script>
                 </form>
             </div><!-- /header -->
             <hr/>
@@ -514,14 +712,19 @@ $rperfil = mysqli_fetch_row($result);
                 Clique no processo para editar
                 <ol id="selectable">
                     <?php
-                    $query = "SELECT `id`,upper(description),`endereco`,dt_registro,lat,lon,IFNULL(tempo_posse,0),IFNULL(calcada,'false'),IFNULL(lixo,'false'),IFNULL(asfalto,'false'),IFNULL(app,'false'),IFNULL(iptu,'false'),IFNULL(cv,'false'),IFNULL(posse,'false') FROM `wp_sml_lar_legal` WHERE fk_wp_sml = $id";
-                    
-                    //echo $query;
+                    $query = "SELECT `id`,upper(description),`endereco`,dt_registro,lat,lon,IFNULL(tempo_posse,0),IFNULL(calcada,'false'),IFNULL(lixo,'false'),IFNULL(asfalto,'false'),IFNULL(app,'false'),IFNULL(iptu,'false'),IFNULL(cv,'false'),IFNULL(posse,'false'),IFNULL(esc_publica,'false'),habitese,IFNULL(ant_2014,'false'),IFNULL(menor_120,'false'),IFNULL(projeto,'false'),IFNULL(iptu_prop,'false') FROM `wp_sml_lar_legal` WHERE fk_wp_sml = $id";
+
+//echo $query;
                     $result = $db->query($query);
                     while ($processo = mysqli_fetch_row($result)) {
                         ?>
                         <li class="ui-widget-content">
-                            <a href="javascript:setMapaProperties('<?php echo $processo[1]; ?>','<?php echo $processo[0]; ?>', '<?php echo $processo[4]; ?>', '<?php echo $processo[5]; ?>', '<?php echo $processo[2]; ?>','<?php echo $processo[6]; ?>',<?php echo $processo[13]; ?>,<?php echo $processo[12]; ?>,<?php echo $processo[11]; ?>,<?php echo $processo[10]; ?>,<?php echo $processo[9]; ?>,<?php echo $processo[7]; ?>,<?php echo $processo[8]; ?>)">
+                            <!-- 
+                            
+                            function setMapaProperties(desc, idLarLegal, plat, plon, addrs, tempo, posse, cv, iptu, app, asfalto, calcada, lixo, esc_publica, habitese, ant_2014, menor_120, projeto, iptu_prop) {
+
+                            -->
+                            <a href="javascript:setMapaProperties('<?php echo $processo[1]; ?>','<?php echo $processo[0]; ?>', '<?php echo $processo[4]; ?>', '<?php echo $processo[5]; ?>', '<?php echo $processo[2]; ?>','<?php echo $processo[6]; ?>',<?php echo $processo[13]; ?>,<?php echo $processo[12]; ?>,<?php echo $processo[11]; ?>,<?php echo $processo[10]; ?>,<?php echo $processo[9]; ?>,<?php echo $processo[7]; ?>,<?php echo $processo[8]; ?>,'<?php echo $processo[14]; ?>','<?php echo $processo[15]; ?>',<?php echo $processo[16]; ?>,<?php echo $processo[17]; ?>,<?php echo $processo[18]; ?>,<?php echo $processo[19]; ?>)">
                                 <img src="http://manguevivo.org.br/wp/wp-content/themes/vantage/templates/assets/images/edit.png" title="Editar" alt="editar" width="20" height="20"/>
                             </a>
                             <b>Localização:</b><?php echo substr($processo[2], 0, 200); ?>...
