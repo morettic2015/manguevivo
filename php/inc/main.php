@@ -21,7 +21,7 @@ $fone = $_GET['fone'];
 if ($acao == "face") {
     $query = "INSERT INTO wp_sml( id, sml_name, sml_email, `sml_origem_lead` ,sml_avatar_url)  "
             . "VALUES ($id,  $name, $email,  'FACEBOOK' ,'https://graph.facebook.com/$id/picture') "
-            . "ON DUPLICATE KEY UPDATE sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  'FACEBOOK'";
+            . "ON DUPLICATE KEY UPDATE sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture'";
     $result = $db->query($query);
     $db->sendEmail("Novo contato [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal \\n http://www.manguevivo.org.br", $email);
     //echo $query;
@@ -412,9 +412,9 @@ $rperfil = mysqli_fetch_row($result);
     <ul>
         <li><a href="#tabs-1">Perfil</a></li>
         <li><a id="tabPrefeitura1" href="#tabs-23">Prefeitura</a></li>
-        <li><a href="#tabs-42">Minha História</a></li>
-        <li><a href="#tabs-22">Documentos</a></li>
-        <li><a href="#tabs-12">Avisos</a></li>
+        <li><a id="tabHistory" href="#tabs-42">Minha História</a></li>
+        <li><a id="tabDocs" href="#tabs-22">Documentos</a></li>
+        <li><a id="tabAvisos" href="#tabs-12">Avisos</a></li>
         <li><a href="#tabs-52">Ajuda</a></li>
     </ul>
     <div id="tabs-23">
@@ -523,10 +523,16 @@ $rperfil = mysqli_fetch_row($result);
                 <script>
                     document.perfilUser.fonte.value = "<?php echo $rperfil[10]; ?>";
                     document.perfilUser.ehPrefeitura.checked = <?php echo $rperfil[5] == "PREFEITURA" ? 'true' : 'false'; ?>;
-                    if (document.perfilUser.ehPrefeitura.checked==true) {
+                    if (document.perfilUser.ehPrefeitura.checked == true) {
+                        $("#tabHistory").hide();
+                        $("#tabDocs").hide();
+                        $("#tabAvisos").hide();
                         $("#tabPrefeitura1").show();
                     } else {
                         $("#tabPrefeitura1").hide();
+                        $("#tabHistory").show();
+                        $("#tabDocs").show();
+                        $("#tabAvisos").show();
                     }
                 </script>
             </div>
