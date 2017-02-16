@@ -3,7 +3,7 @@
  * @Componente de documentos do lar legal
  * @Morettic.com.br
  * 2016 all right reserved!
- * 
+ *
  *  */
 include PATH . 'src/DAO.php';
 
@@ -27,7 +27,7 @@ if ($acao == "face") {
     //echo $query;
     /**
       @ se for a ação de atualiza o perfil
-     * 
+     *
      *  */
 } else if ($acao == "prefeitura") {
     $nmPrefeitura = $_GET['nmPrefeitura'];
@@ -136,7 +136,7 @@ $rperfil = mysqli_fetch_row($result);
 
 <script>
 
-    $(function () {
+    $(function() {
         $("#tabs").tabs();
         $("#tabsProcesso").tabs();
 
@@ -175,7 +175,7 @@ $rperfil = mysqli_fetch_row($result);
             anchorPoint: new google.maps.Point(0, -29)
         });
 
-        autocomplete.addListener('place_changed', function () {
+        autocomplete.addListener('place_changed', function() {
             infowindow.close();
             marker.setVisible(false);
             place = autocomplete.getPlace();
@@ -227,7 +227,7 @@ $rperfil = mysqli_fetch_row($result);
         // Autocomplete.
         function setupClickListener(id, types) {
             var radioButton = document.getElementById(id);
-            radioButton.addEventListener('click', function () {
+            radioButton.addEventListener('click', function() {
                 autocomplete.setTypes(types);
             });
         }
@@ -252,7 +252,7 @@ $rperfil = mysqli_fetch_row($result);
         document.processo.esc_publica.checked = esc_publica;
         document.processo.habitese.value = habitese;
         document.processo.ant_2014.checked = ant_2014;
-        document.processo.menor_120.checked = menor_120;
+        document.processo.menor_120.value = menor_120;
         document.processo.projeto.checked = projeto;
         document.processo.iptu_prop.checked = iptu_prop;
         localizacao = {lat: plat, lon: plon};
@@ -295,7 +295,7 @@ $rperfil = mysqli_fetch_row($result);
         url += "&esc_publica=" + document.processo.esc_publica.checked;
         url += "&habitese=" + document.processo.habitese.value;
         url += "&ant_2014=" + document.processo.ant_2014.checked;
-        url += "&menor_120=" + document.processo.menor_120.checked;
+        url += "&menor_120=" + document.processo.menor_120.value;
         url += "&projeto=" + document.processo.projeto.checked;
         url += "&iptu_prop=" + document.processo.iptu_prop.checked;
         url += "&acao=processo";
@@ -308,7 +308,7 @@ $rperfil = mysqli_fetch_row($result);
 
     }
     function mask(o, f) {
-        setTimeout(function () {
+        setTimeout(function() {
             var v = mphone(o.value);
             if (v != o.value) {
                 o.value = v;
@@ -444,7 +444,7 @@ $rperfil = mysqli_fetch_row($result);
             </div>
             <div class="element-email">
                 <label>As áreas a serem regularizadas pertencem:
-                    <select name="donoArea">
+                    <select name="donoArea" title="As áreas a serem regularizadas pertencem a: união, estado, município ou particular">
                         <option>Selecione</option>
                         <option value='U'>União</option>
                         <option value='E'>Estado</option>
@@ -464,8 +464,8 @@ $rperfil = mysqli_fetch_row($result);
                 </label>
             </div>
             <div class="element-input">
-                <label> Cadastro no siconv:
-                    <input class="large" type="siconv" name="siconv" placeholder="Cadastro no siconv" value="<?php echo $prefeitura[4]; ?>"/>
+                <label>
+                    <input class="large" type="checkbox" name="siconv" placeholder="Possui cadastro no siconv?"/>Possui cadastro no siconv?
                 </label>
             </div>
             <div class="element-input">
@@ -489,6 +489,7 @@ $rperfil = mysqli_fetch_row($result);
                 document.prefeitura.secHabit.checked = <?php echo $prefeitura[6] == "1" ? "true" : "false"; ?>;
                 document.prefeitura.oscipPar.checked = <?php echo $prefeitura[3] == "1" ? "true" : "false"; ?>;
                 document.prefeitura.intSocial.checked = <?php echo $prefeitura[2] == "1" ? "true" : "false"; ?>;
+                document.prefeitura.siconv.checked = <?php echo $prefeitura[4] == "on" ? "true" : "false"; ?>;
             </script>
         </form>
     </div>
@@ -640,40 +641,35 @@ $rperfil = mysqli_fetch_row($result);
                     <br>
                     <div id="frmHabitese" class="element-input">
                         Dados para o habite-se
-                        <div class="element-input">
-                            <label><input type="checkbox" name="esc_publica"/>O Imóvel tem escritura publica;?</label>
+                        <div class="element-input" title="Matrícula no registro de imóveis / escritura de posse">
+                            <label><input type="checkbox" name="esc_publica"/>O Imóvel tem escritura publica?</label>
                         </div>
                         <div class="element-input">
-                            <label><input type="checkbox" name="ant_2014"/>A Construção é anterior a 2014;</label>
+                            <label><input type="checkbox" name="ant_2014"/>A Construção é anterior a 2016</label>
                         </div>
                         <div class="element-input">
-                            <label><input type="checkbox" name="menor_120"/>A Construção tem ate 120 mt²;</label>
+                            <label>Área construindo mt²<input type="number" name="menor_120" title="Informe a área total construída em metros quadrados"/></label>
                         </div>
                         <div class="element-input">
                             <label><input type="checkbox" name="projeto"/>Existe Projeto aprovado;</label>
-                        </div>
-                        <div class="element-input">
-                            <label><input type="checkbox" name="iptu_prop"/>O IPTU esta no nome do proprietário;?</label>
                         </div>
                     </div>
 
                     <div id="frmLarLegal" class="element-input">
                         <br>
-                        Informe detalhadamente as características da situação atual de sua propriedade.<br>
-                        <div class="element-input">
-                            <label><input type="checkbox" name="posse"/>Escritura de posse?</label>
-                        </div>
+                        Informe detalhadamente as características da situação atual de seu imóvel.<br>
+
                         <div class="element-input">
                             <label><input type="checkbox" name="cv"/>Contrato de compra e venda?</label>
                         </div>
                         <div class="element-input">
                             <label><input type="checkbox" name="iptu"/>Paga IPTU?</label>
                         </div>
-                        <div class="element-input">
-                            <label><input type="checkbox" name="app"/>Área APP?</label>
+                        <div class="element-input" title="Área de preservação permante ou área de preservação limitada">
+                            <label><input type="checkbox" name="app"/>Área APP ou APL?</label>
                         </div>
-                        <div class="element-input">
-                            <label><input type="checkbox" name="asfalto"/>Rua asfaltada?</label>
+                        <div class="element-input" >
+                            <label><input  type="checkbox" name="asfalto"/>Rua asfaltada?</label>
                         </div>
                         <div class="element-input">
                             <label><input type="checkbox" name="calcada"/>Rua calçada?</label>
@@ -682,7 +678,7 @@ $rperfil = mysqli_fetch_row($result);
                             <label><input type="checkbox" name="lixo"/>Luz, Água, Coleta de lixo?</label>
                         </div>
                         <div class="element-input">
-                            <label>Tempo de posse<input type="number" name="tempo"/></label>
+                            <label>Tempo de posse (anos)<input type="number" name="tempo" title="Informe o tempo de posse. Número de anos"/></label>
                         </div>
 
                         <input type="hidden" name="id" value="<?php echo $id; ?>"/>
@@ -690,8 +686,15 @@ $rperfil = mysqli_fetch_row($result);
                         <input type="hidden" name="idLarLegal" value="NULL"/>
                         <input type="hidden" name="acao" value="save_lar_legal"/>
                     </div>
+                    <div class="element-input">
+                        <label><input type="checkbox" name="posse"/>Escritura de posse?</label>
+                    </div>
+                    <div class="element-input">
+                        <label><input type="checkbox" name="iptu_prop"/>O IPTU esta no nome do proprietário?</label>
+                    </div>
                     <div  class="element-input">
-                        <textarea class="large" type="text" name="descricao" placeholder="Descricao" cols="40" rows="5"></textarea>
+                        <label>Conte mais sobre o seu imóvel</label><br>
+                        <textarea class="large" type="text" name="descricao" placeholder="Descricao" cols="40" rows="5" title="Ex: Terreno de herança em nome do avô no bairro siriu garopaba"></textarea>
                     </div>
                     <br>
                     Informe o endereço de sua propriedade.
@@ -725,8 +728,8 @@ $rperfil = mysqli_fetch_row($result);
                     while ($processo = mysqli_fetch_row($result)) {
                         ?>
                         <li class="ui-widget-content">
-                            <!-- 
-                            
+                            <!--
+
                             function setMapaProperties(desc, idLarLegal, plat, plon, addrs, tempo, posse, cv, iptu, app, asfalto, calcada, lixo, esc_publica, habitese, ant_2014, menor_120, projeto, iptu_prop) {
 
                             -->

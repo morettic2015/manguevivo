@@ -6,7 +6,7 @@ session_start();
  * @package vantage
  * @since vantage 1.0
  * @license GPL 2.0
- * 
+ *
  * Template Name: Mapa
  */
 get_header();
@@ -46,20 +46,44 @@ $result = $db->query($query);
 
         });
 <?php
+$url = "http://gaeloginendpoint.appspot.com/infosegcontroller.exec?action=6&id=5756433131896832&lat=-27.5833&lon=-48.5667&d=2000&type=MANGUE_VIVO,&myCity=Florianopolis";
+$jsonRet = file_get_contents($url);
+//echo $url;die();
+//var_dump($jsonRet);
+$denuncias = json_decode($jsonRet);
+//var_dump($denuncias);
+
+$dList = $denuncias->rList;
+
+//var_dump($dList);
+
 $cont = 0;
+
+foreach ($dList as $obj) {
+    ?>
+            var marker<?php echo $cont++; ?> = new google.maps.Marker({
+                position: {lat: <?php echo $obj->lat; ?>, lng: <?php echo $obj->lon; ?>},
+                map: map,
+                title: '<?php echo $obj->tit; ?>',
+                icon: 'http://manguevivo.org.br/wp/wp-content/uploads/2016/10/marker_yellow.png'
+            });
+    <?php
+}
+
 while ($processo = mysqli_fetch_row($result)) {
     ?>
             var marker<?php echo $cont++; ?> = new google.maps.Marker({
                 position: {lat: <?php echo $processo[0]; ?>, lng: <?php echo $processo[1]; ?>},
                 map: map,
-                title: '<?php echo $processo[2]; ?>'
+                title: '<?php echo $processo[2]; ?>',
+                icon: 'http://manguevivo.org.br/wp/wp-content/uploads/2016/10/icon_blue.png'
             });
     <?php
 }
 $db->close();
 ?>
     }
-    window.onload = function () {
+    window.onload = function() {
         initMap();
     }
 

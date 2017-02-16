@@ -6,16 +6,19 @@ session_start();
  * @package vantage
  * @since vantage 1.0
  * @license GPL 2.0
- * 
+ *
  * Template Name: Lar Legal
  */
 get_header();
 
         const PATH = '/home/manguevi/public_html/wp/wp-content/themes/vantage/templates/';
 ?>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/south-street/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <style>
     #map {
         height: 400px;
@@ -112,21 +115,21 @@ if (empty($pg)) {
             // Button.  See the onlogin handler attached to it in the sample
             // code below.
             function checkLoginState() {
-                FB.getLoginStatus(function (response) {
+                FB.getLoginStatus(function(response) {
                     statusChangeCallback(response);
                 });
             }
 
-            window.fbAsyncInit = function () {
+            window.fbAsyncInit = function() {
                 FB.init({
                     appId: '1183986588360160',
-                    cookie: true, // enable cookies to allow the server to access 
+                    cookie: true, // enable cookies to allow the server to access
                     // the session
                     xfbml: true, // parse social plugins on this page
                     version: 'v2.8' // use graph api version 2.8
                 });
 
-                // Now that we've initialized the JavaScript SDK, we call 
+                // Now that we've initialized the JavaScript SDK, we call
                 // FB.getLoginStatus().  This function gets the state of the
                 // person visiting this page and can return one of three states to
                 // the callback you provide.  They can be:
@@ -138,14 +141,14 @@ if (empty($pg)) {
                 //
                 // These three cases are handled in the callback function.
 
-                FB.getLoginStatus(function (response) {
+                FB.getLoginStatus(function(response) {
                     statusChangeCallback(response);
                 });
 
             };
 
             // Load the SDK asynchronously
-            (function (d, s, id) {
+            (function(d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id))
                     return;
@@ -159,7 +162,7 @@ if (empty($pg)) {
             // successful.  See statusChangeCallback() for when this call is made.
             function testAPI() {
                 console.log('Welcome!  Fetching your information.... ');
-                FB.api('/me?fields=name,email,picture', function (response) {
+                FB.api('/me?fields=name,email,picture', function(response) {
                     console.log('Successful login for: ' + response.name);
                     // alert(response);
                     main = response;
@@ -187,11 +190,11 @@ if (empty($pg)) {
         -->
         <?php get_template_part('content', 'page'); ?>
         <script>
-            document.getElementById('login').onclick = function () {
+            document.getElementById('login').onclick = function() {
                 var email = document.getElementById('email').value;
                 var passw = document.getElementById('password').value;
                 url = "../wp-content/themes/vantage/templates/login_controller.php?demail=" + email + "&action=login&password=" + passw + "";
-                $.getJSON(url, function (jd) {
+                $.getJSON(url, function(jd) {
                     if (jd.status == 200) {
                         window.location.href = 'https://manguevivo.org.br/wp/projeto-lar-legal/?pg=main&acao=face&username=' + jd.name + '&email=' + jd.email + '&id=' + jd.id + '';
                     } else {
@@ -199,11 +202,11 @@ if (empty($pg)) {
                     }
                 });
             }
-            function saveProfile(){
+            function saveProfile() {
                 var email = document.getElementById('cadEmail').value;
                 var nome = document.getElementById('cadNome').value;
-                url = "../wp-content/themes/vantage/templates/login_controller.php?demail="+email+"&action=add&&name="+nome;
-                $.getJSON(url, function (jd) {
+                url = "../wp-content/themes/vantage/templates/login_controller.php?demail=" + email + "&action=add&&name=" + nome;
+                $.getJSON(url, function(jd) {
                     if (jd.status == 200) {
                         alert('Cadastro realizado com sucesso. Sua senha foi enviada por email.');
                     } else {
@@ -211,25 +214,29 @@ if (empty($pg)) {
                     }
                 });
             }
-            
+
             function cadUser() {
                 $("#dialog-1").dialog("open");
             }
             function lostPass() {
                 var email = prompt('Digite seu email cadastrado no mangue vivo');
                 url = "../wp-content/themes/vantage/templates/login_controller.php?demail=" + email + "&action=lost";
-                $.getJSON(url, function (jd) {
+                $.getJSON(url, function(jd) {
                     if (jd.status == 200) {
-                        alert('Sua nova senha foi enviada por email.')
-                    }else{
-                        alert('Email não encontrado.')
+                        alert('Sua nova senha foi enviada por email.');
+                    } else {
+                        alert('Email não encontrado.');
                     }
                 });
             }
 
             $("#dialog-1").dialog({
-                autoOpen: false,
+                autoOpen: false
             });
+
+            /* $(document).ready(function() {
+             $('[data-toggle="tooltip"]').tooltip();
+             });*/
         </script>
     </center>
 
