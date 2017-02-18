@@ -208,7 +208,7 @@
                 while ($processo = mysqli_fetch_row($result)) {
 
                     // var_dump($processo);
-                    echo "<option value='$processo[0]'>" . substr($processo[1], 0, 100) . "</option>\n";
+                    echo "<option value='$processo[0]'>" . substr($processo[2], 0, 100) . "</option>\n";
                 }
                 ?>
             </select>
