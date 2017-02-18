@@ -23,16 +23,30 @@
             }
         </style>
         <script>
+            var idLead = null;
             var idLarLegal = null;
             function setProcesso(valvlue) {
-                idLarLegal = valvlue;
-                //alert(idLarLegal);
+
+                //alert(localStorage.idLead);
+                var res = valvlue.split("-");
+                idLarLegal = res[1];
+                idLead = res[0];
+
+                if (typeof (Storage) !== "undefined") {
+                    localStorage.setItem("idLarLegal", idLarLegal);
+                    localStorage.setItem("idLead", idLead);
+                } else {
+                    // Sorry! No Web Storage support..
+                }
+                //alert(localStorage.idLead);
+                //alert(valvlue);
             }
             var checkMarked = null;
-            var idLead = null;
             function setLead(valvlue) {
                 checkMarked = valvlue;
                 idLead = checkMarked.value;
+                localStorage.setItem("idLead", idLead);
+                localStorage.setItem("idLarLegal", "NULL");
                 // alert(idLead);
             }
             function loadUpload() {
@@ -45,44 +59,27 @@
                 loadUrl("history");
             }
             function loadProcess() {
-                if (isNaN(idLead)) {
-                    alert('Selecione um lead');
-                    return;
-                } else if (idLead == "") {
-                    alert('Selecione um lead');
-                    return;
-                } else if (idLead == null) {
+                if (isNaN(localStorage.idLead)) {
                     alert('Selecione um lead');
                     return;
                 }
-                this.location.href = "https://manguevivo.org.br/wp/wp-content/themes/vantage/process.php?id=NULL&lead=" + idLead;
+                this.location.href = "https://manguevivo.org.br/wp/wp-content/themes/vantage/process.php?id=NULL&lead=" + localStorage.idLead;
             }
             function editProcess() {
-                if (isNaN(idLarLegal)) {
-                    alert('Selecione um processo');
-                    return;
-                } else if (idLarLegal == "") {
-                    alert('Selecione um processo');
-                    return;
-                } else if (idLarLegal == null) {
+                if (isNaN(localStorage.idLarLegal)) {
                     alert('Selecione um processo');
                     return;
                 }
-                this.location.href = "https://manguevivo.org.br/wp/wp-content/themes/vantage/process.php?id=" + idLarLegal;
+                this.location.href = "https://manguevivo.org.br/wp/wp-content/themes/vantage/process.php?id=" + localStorage.idLarLegal + "&lead=" + localStorage.idLead;
             }
 
             function loadUrl(url) {
-                if (isNaN(idLarLegal)) {
-                    alert('Selecione um processo');
-                    return;
-                } else if (idLarLegal == "") {
-                    alert('Selecione um processo');
-                    return;
-                } else if (idLarLegal == null) {
+                if (isNaN(localStorage.idLarLegal) && isNaN(localStorage.idLead)) {
                     alert('Selecione um processo');
                     return;
                 }
-                this.location.href = "../wp-content/themes/vantage/" + url + ".php?id=" + idLarLegal;
+                this.location.href = "../wp-content/themes/vantage/" + url + ".php?id=" + localStorage.idLarLegal + "&lead=" + localStorage.idLead;
+                ;
             }
         </script>
     </head>
@@ -118,36 +115,52 @@
 
                 </form>
                 <div class="ui-grid-b ui-responsive" >
-                    <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:20px;">Nome</div></div>
-                    <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:20px">Email</div></div>
-                    <div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:20px">Processo(s)</div></div>
+                    <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:20px;">Contato</div></div>
+                    <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:20px">Opções do contato</div></div>
+                    <div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:20px">Processo(s) do Lar legal</div></div>
 
                 </div><!-- /grid-c -->
                 <?php
                 include '/home/manguevi/public_html/wp/wp-content/themes/vantage/templates/src/DAO.php';
                 $where = "";
+                $touch = "";
                 if (isset($_GET['leadName'])) {
                     $where = "and (sml_name like '%" . $_GET['leadName'] . "%' or sml_email like '%" . $_GET['leadName'] . "%')";
+                } else {
+                    $touch = " AND intouch =0";
                 }
                 //Dao
                 $db = new DAO();
-                $query = "SELECT id, UPPER( sml_name ) AS nm, UPPER( sml_email ) AS mail, sml_avatar_url FROM  `wp_sml` WHERE intouch =0 $where ORDER BY sml_name ASC";
-
+                $query = "SELECT id, UPPER( sml_name ) AS nm, UPPER( sml_email ) AS mail, sml_avatar_url, sml_origem_lead FROM  `wp_sml` WHERE 1=1 $touch $where ORDER BY sml_name ASC";
+                //echo $query;
                 $result = $db->query($query);
                 $i = 0;
-//      
+//
                 while ($processo = mysqli_fetch_row($result)) {
                     $i++;
                     ?>
                     <div class="ui-grid-b ui-responsive" >
-                        <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:110px" align="center">
-                                <img src="<?php echo $processo[3]; ?>" style="border-radius: 25px;">
-                                <br>
-                                <a data-ajax="false"  href="../wp-content/themes/vantage/profile.php?id=<?php echo $processo[0]; ?>" class="ui-btn ui-corner-all ui-icon-edit ui-btn-icon-right" data-transition="slidedown"><?php echo $processo[1]; ?></a>
+                        <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:100px" align="center">
+
+                                <img src="<?php echo $processo[3]; ?>" style="border-radius: 25px;"><br>
+                                <?php echo $processo[2]; ?><br>
+                                <small><?php echo $processo[4]; ?></small>
                             </div>
                         </div>
-                        <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:110px" align="center"><br><?php echo $processo[2]; ?><br><br><label>Selecionar<input type="radio" name="chm" value="<?php echo $processo[0]; ?>" onclick="setLead(this)"/></label></div></div>
-                        <div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:110px">
+                        <div class="ui-block-b">
+                            <div class="ui-bar ui-bar-a" style="height:100px" align="center">
+                                <br>
+
+                                <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+                                    <label>Selecionar<input type="radio" name="chm" value="<?php echo $processo[0]; ?>" onclick="setLead(this)"/></label>
+                                    <a data-ajax="false"  href="../wp-content/themes/vantage/profile.php?id=<?php echo $processo[0]; ?>" class="ui-btn ui-corner-all ui-icon-edit ui-btn-icon-right" data-transition="slidedown">Editar contato</a>
+                                    <a data-ajax="false"  href="../wp-content/themes/vantage/prefeitura.php?id=<?php echo $processo[0]; ?>" class="ui-btn ui-corner-all ui-icon-edit ui-btn-icon-right" data-transition="slidedown">Vincular Prefeitura</a>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:100px">
                                 <div class="ui-field-contain">
                                     <select name="select-native-1" id="select-native-1" onclick="setProcesso(this.value)">
                                         <?php
@@ -155,7 +168,7 @@
                                         echo $query1;
                                         $result1 = $db->query($query1);
                                         while ($processo1 = mysqli_fetch_row($result1)) {
-                                            echo '<option value="' . $processo1[0] . '">' . $processo1[2] . '</option>\n';
+                                            echo '<option value="' . $processo[0] . '-' . $processo1[0] . '">' . $processo1[2] . '</option>\n';
                                             //echo "<a href=" . $processo1[1] . '/>' . $processo1[2] . '</a>';
                                         }
                                         ?>
@@ -173,4 +186,4 @@
             </div>
 
     </body>
-</html> 
+</html>

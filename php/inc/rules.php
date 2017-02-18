@@ -71,14 +71,24 @@ if ($acao == "face") {
     echo "<h1>Dados do município atualizados com sucesso</h1>";
 } else if ($acao == "update_profile") {
     $rg = $_GET['rg'];
-    $cpf = $_GET['cpf'];
+    $cpf = $_GET['cpf'] == "" ? NULL : $_GET['cpf'];
     $obs = $_GET['obs'];
     $fonte = $_GET['fonte'];
     $fone1 = $_GET['fone1'];
     $fone = $_GET['fone'];
     $ehPrefeitura = empty($_GET['ehPrefeitura']) ? 'LAR_LEGAL' : 'PREFEITURA';
     //var_dump($_GET);
-    $query = "UPDATE wp_sml set sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  '$ehPrefeitura', `fonte`='$fonte',`fone_fixo`='$fone1',`obs`='$obs',sml_fone='$fone', rg='$rg', c_pf_pj='$cpf' where id = $id";
+    $query = "UPDATE wp_sml set sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  '$ehPrefeitura', `fonte`='$fonte',`fone_fixo`='$fone1',`obs`='$obs',sml_fone='$fone', rg='$rg',";
+
+    if ($cpf == NULL) {
+        $query.= " c_pf_pj=NULL where id = $id";
+    } else {
+        $query.= "c_pf_pj='$cpf' where id = $id";
+    }
+
+
+    //echo $query;
+    //die;
     $result = $db->query($query);
 
     //echo $query;

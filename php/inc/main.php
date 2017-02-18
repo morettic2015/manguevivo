@@ -59,7 +59,7 @@
             </div>
             <div class="element-input">
                 <label>
-                    <input class="large" type="checkbox" name="siconv" placeholder="Possui cadastro no siconv?"/>Possui cadastro no siconv?
+                    <input class="large" type="checkbox" name="siconv" placeholder="Possui cadastro no siconv?"/>Possui cadastro no siconv
                 </label>
             </div>
             <div class="element-input">
@@ -147,7 +147,7 @@
                 <input class="large" type="text" name="rg" placeholder="Rg" value="<?php echo $rperfil[7]; ?>"/>
             </div>
             <div class="element-input">
-                <input class="large" type="text" name="cpf" placeholder="Cpf ou Cnpj" onkeypress='mascaraMutuario(this, cpfCnpj)' onblur='clearTimeout()' value="<?php echo $rperfil[8]; ?>"/>
+                <input class="large" type="text" name="cpf" placeholder="Cpf ou Cnpj" onkeypress='mascaraMutuario(this, cpfCnpj)' onblur='clearTimeout()' value="<?php echo $rperfil[8] == "NULL" ? "" : $rperfil[8]; ?>"/>
             </div>
             <br>
             <div class="submit"><input type="submit" value="Salvar"/></div>

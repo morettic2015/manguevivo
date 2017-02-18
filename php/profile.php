@@ -14,10 +14,10 @@
 
     </head>
     <body>
-        <div data-role="page" data-dialog="true">
+        <div data-role="page" data-dialog="false">
 
             <div data-role="header" data-theme="a">
-                <h1>Meus dados</h1> 
+                <h1>Meus dados</h1>
             </div>
             <?php
             include '/home/manguevi/public_html/wp/wp-content/themes/vantage/templates/src/DAO.php';
@@ -46,10 +46,10 @@
                     $query = "INSERT INTO `manguevi_portal_2016`.`wp_sml` (`id`, `sml_name`, `sml_email`, `sml_sexo`,`sml_fone`, `rg`, `c_pf_pj`, `intouch`, `fonte`, `fone_fixo`, `obs`)"
                             . " VALUES (NULL, '$name', '$email', 'M',  '$fone', '$rg', '$cpf', '0', '$fonte', '$fone1', '$obs')";
                     $result = $db->query($query);
-                    
+
                     echo '<h1>Dados inseridos com sucesso</h1>';
-                    
-                    
+
+
                     $query = "SELECT id FROM  `wp_sml` WHERE sml_email =  '$email'";
                     //echo $query;
                     $result = $db->query($query);

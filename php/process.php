@@ -2,64 +2,101 @@
 <?php
 include '/home/manguevi/public_html/wp/wp-content/themes/vantage/templates/src/DAO.php';
 
+$message = "";
 $id = $_GET['id'];
 $db = new DAO();
+$lead = $_GET['lead'];
 if (isset($_GET['acao'])) {
 
+    $habitese = $_GET['habitese'];
+    $posse = (isset($_GET['posse'])) ? "1" : "0";
+    $cv = (isset($_GET['cv'])) ? "1" : "0";
+    $iptu = (isset($_GET['iptu'])) ? "1" : "0";
+    $app = (isset($_GET['app'])) ? "1" : "0";
+    $asfalto = (isset($_GET['asfalto'])) ? "1" : "0";
+    $iptu_prop = (isset($_GET['iptu_prop'])) ? "1" : "0";
+    $lixo = (isset($_GET['lixo'])) ? "1" : "0";
+    $description = $_GET['descricao'];
+    $endereco = $_GET['endereco'];
+    $lat = $_GET['lat'];
+    $lon = $_GET['lon'];
+    $tempo = $_GET['tempo'];
+    $calcada = (isset($_GET['calcada'])) ? "1" : "0";
+    $tempo_posse = (isset($_GET['tempo'])) ? $_GET['tempo'] : "0";
+    $esc_publica = (isset($_GET['esc_publica'])) ? "1" : "0";
+    $ant_2014 = (isset($_GET['ant_2014'])) ? "1" : "0";
+    $menor_120 = (isset($_GET['menor_120'])) ? $_GET['menor_120'] : "-1";
+    $projeto = (isset($_GET['projeto'])) ? "1" : "0";
+    $p_hid = (isset($_GET['p_hid'])) ? "1" : "0";
+    $p_arq = (isset($_GET['p_arq'])) ? "1" : "0";
+    $p_est = (isset($_GET['p_est'])) ? "1" : "0";
+    // $iptu_prop
 
-    $posse = (isset($_GET['posse'])) ? "true" : "false";
-    $cv = (isset($_GET['cv'])) ? "true" : "false";
-    $iptu = (isset($_GET['iptu'])) ? "true" : "false";
-    $app = (isset($_GET['app'])) ? "true" : "false";
-    $asfalto = (isset($_GET['asfalto'])) ? "true" : "false";
-    $calcada = (isset($_GET['calcada'])) ? "true" : "false";
-    $lixo = (isset($_GET['lixo'])) ? "true" : "false";
+    if ($habitese == "l") {
+        if ($id == "NULL") {
+            $query = "INSERT INTO `wp_sml_lar_legal`("
+                    . " `fk_wp_sml`, `description`, "
+                    . "`endereco`, `lat`, `lon`, "
+                    . "`dt_registro`, `posse`, `cv`, "
+                    . "`iptu`, `app`, `asfalto`, "
+                    . "`lixo`, `calcada`, "
+                    . "`tempo_posse`, "
+                    . "`esc_publica`, "
+                    . "`habitese`, `ant_2014`, `menor_120`, `projeto`, `iptu_prop`, `p_hid`, `p_arq`, `p_est`) "
+                    . "VALUES ($lead,'$description','$endereco','$lat','$lon',now(),'$posse','$cv','$iptu','$app','$asfalto',"
+                    . "'$lixo','$calcada','$tempo_posse','$esc_publica','$habitese','$ant_2014','$menor_120','$projeto','$iptu_prop','$p_hid','$p_arq','$p_est')";
 
-    if ($id == "NULL") {
-        $query = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_lar_legal` (
-                    `id` ,
-                    `fk_wp_sml` ,
-                    `description` ,
-                    `endereco` ,
-                    `lat` ,
-                    `lon` ,
-                    `dt_registro` ,
-                    `posse` ,
-                    `cv` ,
-                    `iptu` ,
-                    `app` ,
-                    `asfalto` ,
-                    `lixo` ,
-                    `calcada` ,
-                    `tempo_posse`)
-                VALUES (NULL ,  '" . $_GET['lead'] . "',  '" . $_GET['descricao'] . "',  '" . $_GET['endereco'] . "',  '" . $_GET['lat'] . "','" . $_GET['lon'] . "',"
-                . " CURRENT_TIMESTAMP ,  '$posse',  '$cv',  '$iptu',  '$app',  '$asfalto',  '$calcada',  '$lixo',  '" . $_GET['tempo'] . "' )";
+            echo $query;
+            $result = $db->query($query);
 
-        //echo $query;
-        $result = $db->query($query);
+            $query = "SELECT MAX( id ) FROM wp_sml_lar_legal WHERE fk_wp_sml =" . $lead;
+            $result = $db->query($query);
+            $processo = mysqli_fetch_row($result);
+            $id = $processo[0];
 
-        $query = "SELECT MAX( id ) FROM wp_sml_lar_legal WHERE fk_wp_sml =" . $_GET['lead'];
-        $result = $db->query($query);
-        $processo = mysqli_fetch_row($result);
-        $id = $processo[0];
-        echo "<h1>Processo cadastrado com sucesso</h1>";
+
+            $message = "<h1>Processo cadastrado com sucesso</h1>";
+        } else {
+            $query = "UPDATE  `manguevi_portal_2016`.`wp_sml_lar_legal` SET
+                        `description` =  '" . $description . "',
+                        `endereco` =  '" . $endereco . "',
+                        `lat` =  '" . $lat . "',
+                        `lon` =  '" . $lon . "',
+                        `posse` =  '$posse',
+                        `cv` =  '$cv',
+                        `app` =  '$app',
+                        `asfalto` =  '$asfalto',
+                        `iptu_prop` =  '$iptu_prop',
+                        `lixo` =  '$lixo',
+                        `iptu` =  '$iptu',
+                        `tempo_posse` =  '" . $tempo . "' WHERE  `wp_sml_lar_legal`.`id` =$id";
+            echo $query;
+            $result = $db->query($query);
+            $message = "<h1>Processo atualizado com sucesso</h1>";
+        }
     } else {
-        $query = "UPDATE  `manguevi_portal_2016`.`wp_sml_lar_legal` SET  
-                `description` =  '" . $_GET['descricao'] . "',
-                `endereco` =  '" . $_GET['endereco'] . "',
-                `lat` =  '" . $_GET['lat'] . "',
-                `lon` =  '" . $_GET['lon'] . "',
-                `posse` =  '$posse',
-                `cv` =  '$cv',
-                `app` =  '$app',
-                `asfalto` =  '$asfalto',
-                `calcada` =  '$calcada',
-                `lixo` =  '$lixo',
-                `iptu` =  '$iptu',
-                `tempo_posse` =  '" . $_GET['tempo'] . "' WHERE  `wp_sml_lar_legal`.`id` =$id";
-       // echo $query;
+        $on1 = false;
+        if ($id == "NULL") {
+            $query = "INSERT INTO `manguevi_portal_2016`.`wp_sml_lar_legal` (`fk_wp_sml`, `description`, `endereco`, `lat`, `lon`, `posse`, `cv`, "
+                    . "`iptu`, `app`, `asfalto`,  `lixo`, `calcada`, `tempo_posse`, `esc_publica`, `habitese`, `ant_2014`, `menor_120`, `projeto`, `iptu_prop`,`p_hid`,`p_arq`,`p_est`) "
+                    . "VALUES (' $lead ', '$description', '$endereco', '$lat', '$lon', '$posse', '$cv', '$iptu', '$app', '$asfalto', '$lixo', '$calcada', '$tempo_posse'"
+                    . ", $esc_publica, '$habitese',$ant_2014, $menor_120, $projeto, $iptu_prop,'$p_hid','$p_arq','$p_est') ";
+            $on1 = true;
+        } else {
+            $query = "update `manguevi_portal_2016`.`wp_sml_lar_legal` set  description = '$desc', lat = '$lat',lon='$lon',endereco='$endereco',"
+                    . " `posse`='$posse', `cv`='$cv', `iptu`='$iptu', `app`='$app', `asfalto`='$asfalto',  `lixo`='$lixo', `calcada`='$calcada', `tempo_posse`='$tempo_posse',"
+                    . " `esc_publica`=$esc_publica, `habitese`='$habitese', `ant_2014`=$ant_2014, `menor_120`=$menor_120,  `projeto`=$projeto, `iptu_prop`=$iptu_prop , "
+                    . " `p_hid`=$p_hid , `p_arq`=$p_arq , `p_est`=$p_est where id=$id";
+        }
+        echo $query;
         $result = $db->query($query);
-        echo "<h1>Processo atualizado com sucesso</h1>";
+
+        if ($on1) {
+            $query = "SELECT MAX( id ) FROM wp_sml_lar_legal WHERE fk_wp_sml =" . $lead;
+            $result = $db->query($query);
+            $processo = mysqli_fetch_row($result);
+            $id = $processo[0];
+        }
     }
 }
 
@@ -136,12 +173,12 @@ if ($id != "NULL") {
         <script>
 
             function setLatLon() {
-                alert(document.processo.lat.value);
+                //alert(document.processo.lat.value);
 
                 document.processo.lat.value = localizacao.lat;
                 document.processo.lon.value = localizacao.lon;
 
-                alert(document.processo.lat.value);
+                //alert(document.processo.lat.value);
                 // alert(document.processo.lon.value);
 
             }
@@ -185,7 +222,7 @@ if ($processo[4] != "") {
                     anchorPoint: new google.maps.Point(0, -29)
                 });
 
-                autocomplete.addListener('place_changed', function () {
+                autocomplete.addListener('place_changed', function() {
                     infowindow.close();
                     marker.setVisible(false);
                     place = autocomplete.getPlace();
@@ -240,7 +277,7 @@ if ($processo[4] != "") {
                 // Autocomplete.
                 function setupClickListener(id, types) {
                     var radioButton = document.getElementById(id);
-                    radioButton.addEventListener('click', function () {
+                    radioButton.addEventListener('click', function() {
                         autocomplete.setTypes(types);
                     });
                 }
@@ -250,71 +287,165 @@ if ($processo[4] != "") {
                 setupClickListener('changetype-establishment', ['establishment']);
                 setupClickListener('changetype-geocode', ['geocode']);
             }
-
-            window.onload = function () {
+            var txtPosseTit;
+            window.onload = function() {
                 navigator.geolocation.getCurrentPosition(success, success, options);
+                txtPosseTit = document.getElementById('txtPosseTit');
+            }
+
+            function showHideHabit(v) {
+                // var element = document.getElementById("titDescInner");
+                if (v) {
+                    // element.innerHTML = 'Conte sua história para que possamos regularizar seu imóvel';
+                    $("#frmLarLegal").hide();
+                    $("#frmHabitese").show();
+                    document.processo.habitese.value = 'h';
+                    // txtPosseTit.innerHTML = 'Escritura de posse ou contrato de compra e venda?';
+                } else {
+                    // element.innerHTML = 'Conte sua história para que possamos regularizar seu terreno';
+                    $("#frmHabitese").hide();
+                    $("#frmLarLegal").show();
+                    document.processo.habitese.value = 'i';
+                    // txtPosseTit.innerHTML = 'Escritura de posse?';
+                }
+
+            }
+
+            function showHideProjects(el) {
+                /*var fSHow = document.getElementById('projetos_chk');
+                 if (el.checked == true) {
+                 fSHow.style.display = 'block';
+                 fSHow.style.visibility = 'visible';
+                 $("#projetos_chk").show();
+
+                 } else {
+                 fSHow.style.display = 'none';
+                 fSHow.style.visibility = 'hidden';
+                 $("#projetos_chk").hide();
+                 }*/
             }
         </script>
     </head>
     <body>
-        <div data-role="page" data-dialog="true">
+        <div data-role="page" data-dialog="false">
 
             <div data-role="header" data-theme="a">
-                <h1>Processo</h1> 
+                <h1>Escritura Pública</h1>
             </div>
             <h1><b>Regularização Fundiária</b></h1>
             <br>
+            <?php echo "<h4>$message</h4>"; ?>
             <div class="element-input">
                 <a href="http://manguevivo.org.br/wp/wp-admin/admin.php?page=lar_legal_morettic_com_br" data-ajax="false"  class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-back ui-btn-icon-left ui-btn-a">Voltar</a>
             </div>
             <form data-ajax="false"  name="processo" style="max-width:100%;min-width:150px" method="get" action="https://manguevivo.org.br/wp/wp-content/themes/vantage/process.php" onsubmit="setLatLon()">
+
                 <div class="title"><h2>Conte a sua história para que possamos fazer o seu lar legal!</h2></div>
                 <div class="element-input">
-                    <br>
-                    <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>"/>
-                    Informe detalhadamente as características da situação atual de sua propriedade.<br>
+                    <label><input type="radio" name="habitese" value="h" onclick="showHideHabit(true)"/>Habite-se</label>
+                    <label><input type="radio" name="habitese" value="l" checked="true" onclick="showHideHabit(false)"/>Escritura pública</label>
+                </div>
+                <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>"/>
+                Informe detalhadamente as características da situação atual de sua propriedade.<br><br>
+                <div class="element-input">
+                    <input type="checkbox" name="posse"/><br><label id="txtPosseTit">Tem escritura de posse?</label>
+                </div>
+                <div id="frmHabitese" class="element-input">
                     <div class="element-input">
-                        <label><input type="checkbox" name="posse"/>Escritura de posse?</label>
+                        <label><input type="checkbox" name="calcada"/>Imóvel tem matrícula no registro de imóveis?</label>
                     </div>
+                    <div class="element-input" title="Matrícula no registro de imóveis / escritura de posse">
+                        <label><input type="checkbox" name="esc_publica"/>O Imóvel tem escritura publica?</label>
+                    </div>
+                    <div class="element-input">
+                        <label><input type="checkbox" name="ant_2014"/>A Construção é anterior a 2016</label>
+                    </div>
+                    <div class="element-input">
+                        <label>
+                            Área construida mt²
+                            <select name="menor_120" id="menor_120">
+                                <option value=""></option>
+                                <option <?php echo $processo[18] == "1" ? "selected" : ""; ?> value="1">até 120 m²</option>
+                                <option <?php echo $processo[18] == "2" ? "selected" : ""; ?> value="2">acima de 120 m²</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="element-input">
+                        <label><input type="checkbox" name="projeto" onclick="showHideProjects(this)">Existe Projeto?</label>
+                        <br>
+                        <div id="projetos_chk">
+                            <label><input type="checkbox" name="p_hid" value="h"/>Hidráulico</label>
+                            <label><input type="checkbox" name="p_arq" value="a"/>Arquitetonico</label>
+                            <label><input type="checkbox" name="p_est" value="e"/>Estrutural</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="frmLarLegal" class="element-input">
                     <div class="element-input">
                         <label><input type="checkbox" name="cv"/>Contrato de compra e venda?</label>
                     </div>
                     <div class="element-input">
-                        <label><input type="checkbox" name="iptu" />Paga IPTU?</label>
+                        <label><input type="checkbox" name="iptu"/>Paga IPTU?</label>
+                    </div>
+                    <div class="element-input" title="Área de preservação permante ou área de preservação limitada">
+                        <label><input type="checkbox" name="app"/>Área APP ou APL?</label>
+                    </div>
+                    <div class="element-input" >
+                        <label><input  type="checkbox" name="asfalto"/>Rua asfaltada ou calçada?</label>
+                    </div>
+
+                    <div class="element-input">
+                        <label><input type="checkbox" name="lixo"/>Serviço de Luz, Água ou Coleta de lixo?</label>
                     </div>
                     <div class="element-input">
-                        <label><input type="checkbox" name="app"/>Área APP?</label>
+                        <label>Tempo de posse (anos)<input type="number" name="tempo" title="Informe o tempo de posse. Número de anos" value="<?php echo empty($processo[14]) ? "0" : $processo[14]; ?>"/></label>
                     </div>
-                    <div class="element-input">
-                        <label><input type="checkbox" name="asfalto" />Rua asfaltada?</label>
-                    </div>
-                    <div class="element-input">
-                        <label><input type="checkbox" name="calcada"/>Rua calçada?</label>
-                    </div>
-                    <div class="element-input">
-                        <label><input type="checkbox" name="lixo" />Luz, Água, Coleta de lixo?</label>
-                    </div>
-                    <div class="element-input">
-                        <label>Tempo de posse<input type="number" name="tempo" value="<?php echo $processo[14]; ?>"/></label>
-                    </div>
-                    <script>
-                        document.processo.posse.checked = <?php echo $processo[7]; ?>;
-                        document.processo.cv.checked = <?php echo $processo[8]; ?>;
-                        document.processo.iptu.checked = <?php echo $processo[9]; ?>;
-                        document.processo.app.checked = <?php echo $processo[10]; ?>;
-                        document.processo.asfalto.checked = <?php echo $processo[11]; ?>;
-                        document.processo.calcada.checked = <?php echo $processo[13]; ?>;
-                        document.processo.lixo.checked = <?php echo $processo[12]; ?>;
-                    </script>
-                    <textarea class="large" type="text" name="descricao" placeholder="Descricao" cols="50" rows="5"><?php echo $processo[2]; ?></textarea>
+                    <input type="hidden" name="lead" value="<?php echo $lead; ?>"/>
                     <input type="hidden" name="id" value="<?php echo $id; ?>"/>
                     <input type="hidden" name="pg" value="main"/>
-                    <input type="hidden" name="lead" value="<?php echo $_GET['lead']; ?>"/>
                     <input type="hidden" name="idLarLegal" value="NULL"/>
-                    <input type="hidden" name="lat" value="<?php echo $processo[4]; ?>"/>
-                    <input type="hidden" name="lon" value="<?php echo $processo[5]; ?>"/>
                     <input type="hidden" name="acao" value="save_lar_legal"/>
                 </div>
+
+                <div class="element-input">
+                    <label><input type="checkbox" name="iptu_prop"/>O IPTU esta no nome do proprietário?</label>
+                </div>
+
+                <script>
+                    showHideHabit(<?php echo $processo[16] == "h" ? "true" : "false"; ?>);
+                    document.processo.posse.checked = <?php echo empty($processo[7]) ? "false" : "true"; ?>;
+                    document.processo.cv.checked = <?php echo empty($processo[8]) ? "false" : "true"; ?>;
+                    document.processo.iptu.checked = <?php echo empty($processo[9]) ? "false" : "true"; ?>;
+                    document.processo.app.checked = <?php echo empty($processo[10]) ? "false" : "true"; ?>;
+                    document.processo.asfalto.checked = <?php echo empty($processo[11]) ? "false" : "true"; ?>;
+                    document.processo.iptu_prop.checked = <?php echo empty($processo[20]) ? "false" : "true"; ?>;
+                    document.processo.lixo.checked = <?php echo empty($processo[12]) ? "false" : "true"; ?>;
+
+                    document.processo.projeto.checked = <?php echo empty($processo[18]) ? "false" : "true"; ?>;
+                    showHideProjects(document.processo.projeto.checked);
+
+                    document.processo.p_hid.checked = <?php echo empty($processo[21]) ? "false" : "true"; ?>;
+                    document.processo.p_arq.checked = <?php echo empty($processo[22]) ? "false" : "true"; ?>;
+                    document.processo.p_est.checked = <?php echo empty($processo[23]) ? "false" : "true"; ?>;
+
+                    document.processo.calcada.checked = <?php echo empty($processo[13]) ? "false" : "true"; ?>;
+                    document.processo.esc_publica.checked = <?php echo empty($processo[15]) ? "false" : "true"; ?>;
+                    document.processo.ant_2014.checked = <?php echo empty($processo[17]) ? "false" : "true"; ?>;
+
+
+                </script>
+                <br>
+                <label id="titDescInner">Conte mais sobre o seu imóvel</label><br>
+                <textarea class="large" type="text" name="descricao" placeholder="Descricao" cols="50" rows="5"><?php echo $processo[2]; ?></textarea>
+                <input type="hidden" name="id" value="<?php echo $id; ?>"/>
+                <input type="hidden" name="pg" value="main"/>
+                <input type="hidden" name="lead" value="<?php echo $lead; ?>"/>
+                <input type="hidden" name="idLarLegal" value="NULL"/>
+                <input type="hidden" name="lat" value="<?php echo $processo[4]; ?>"/>
+                <input type="hidden" name="lon" value="<?php echo $processo[5]; ?>"/>
+                <input type="hidden" name="acao" value="save_lar_legal"/>
+
 
                 <br>
                 Informe o endereço de sua propriedade.
@@ -331,3 +462,7 @@ if ($processo[4] != "") {
             </form>
     </body>
 </html>
+<?php
+$db->close();
+?>
+

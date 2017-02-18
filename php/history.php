@@ -14,10 +14,10 @@
 
     </head>
     <body>
-        <div data-role="page" data-dialog="true">
+        <div data-role="page" data-dialog="false">
 
-            <div data-role="header" data-theme="a">
-                <h1>Enviar mensagem</h1> 
+            <div data-role="header" data-theme="b">
+                <h1>Histórico de mensagens</h1>
             </div>
             <div class="element-input">
                 <a href="http://manguevivo.org.br/wp/wp-admin/admin.php?page=lar_legal_morettic_com_br" data-ajax="false"  class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-back ui-btn-icon-left ui-btn-a">Voltar</a>
@@ -26,8 +26,19 @@
                 <?php
                 include '/home/manguevi/public_html/wp/wp-content/themes/vantage/templates/src/DAO.php';
                 $db = new DAO();
-                $query = "SELECT `dt_registro`,`author`,`acao` FROM `wp_sml_log` WHERE id_processo = " . $_GET['id'] . " order by dt_registro desc";
-                
+
+
+                $filter = "";
+
+                if (!empty($_GET['id']) && $_GET['id'] != "NULL") {
+                    $filter.= " and id_processo = " . $_GET['id'];
+                }
+                if (!empty($_GET['lead']) && $_GET['lead'] != "NULL") {
+                    $filter.= " and (id_contato = " . $_GET['lead'] . " or author = " . $_GET['lead'] . " )";
+                }
+
+                $query = "SELECT `dt_registro`,`author`,`acao` FROM `wp_sml_log` WHERE 1=1 $filter  order by dt_registro desc";
+
                 //echo $query;
                 $result = $db->query($query);
                 while ($processo = mysqli_fetch_row($result)) {
