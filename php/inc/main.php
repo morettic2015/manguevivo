@@ -1,412 +1,6 @@
-<?php
-/**
- * @Componente de documentos do lar legal
- * @Morettic.com.br
- * 2016 all right reserved!
- *
- *  */
-include PATH . 'src/DAO.php';
-
-$db = new DAO();
-
-// Quote and escape form submitted values
-$name = $db->quote($_GET['username']);
-$email = $db->quote($_GET['email']);
-$id = $_GET['id'];
-$acao = $_GET['acao'];
-$fone = $_GET['fone'];
-/**
-  @se vier do facebook cria um perfil e atualiza o avatar
- *  */
-if ($acao == "face") {
-    $query = "INSERT INTO wp_sml( id, sml_name, sml_email, `sml_origem_lead` ,sml_avatar_url)  "
-            . "VALUES ($id,  $name, $email,  'FACEBOOK' ,'https://graph.facebook.com/$id/picture') "
-            . "ON DUPLICATE KEY UPDATE sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture'";
-    $result = $db->query($query);
-    $db->sendEmail("Novo contato [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal \\n http://www.manguevivo.org.br", $email);
-    //echo $query;
-    /**
-      @ se for a ação de atualiza o perfil
-     *
-     *  */
-} else if ($acao == "prefeitura") {
-    $nmPrefeitura = $_GET['nmPrefeitura'];
-    $donoArea = $_GET['donoArea'];
-    $intSocial = isset($_GET['intSocial']) ? '1' : '0';
-    $oscipPar = isset($_GET['oscipPar']) ? '1' : '0';
-    $siconv = $_GET['siconv'];
-    $totalImoveis = $_GET['totalImoveis'] == "" ? "0" : $_GET['totalImoveis'];
-    $secHabit = isset($_GET['secHabit']) ? '1' : '0';
-    $id = $_GET['id'];
-    $query = "INSERT INTO `wp_sml_prefeitura`("
-            . "`fk_wp_sml`, "
-            . "`wp_sml_dono`, "
-            . "`wp_sml_interesse`, "
-            . "`wp_sml_p_oscip`, "
-            . "`wp_sml_sincov`, "
-            . "`wp_sml_total`, "
-            . "`wp_sml_sec_hab`, "
-            . "`wp_sml_prefeitura`) VALUES ($id,'$donoArea','$intSocial','$oscipPar','$siconv','$totalImoveis','$secHabit','$nmPrefeitura')"
-            . "ON DUPLICATE KEY UPDATE "
-            . "wp_sml_dono =  '$donoArea',"
-            . "wp_sml_interesse =  '$intSocial',"
-            . "wp_sml_p_oscip =  '$oscipPar',"
-            . "wp_sml_sincov =  '$siconv',"
-            . "wp_sml_total =  '$totalImoveis',"
-            . "wp_sml_sec_hab =  '$secHabit',"
-            . "wp_sml_prefeitura =  '$nmPrefeitura'";
-    $result = $db->query($query);
-    $queryLog = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_log` (`author` , `acao` ) VALUES ( $id,  'DADOS DA PREFEITURA ATUALIZADOS' )";
-    $result = $db->query($queryLog);
-
-    //echo $query;
-
-    echo "<h1>Dados do município atualizados com sucesso</h1>";
-} else if ($acao == "update_profile") {
-    $rg = $_GET['rg'];
-    $cpf = $_GET['cpf'];
-    $obs = $_GET['obs'];
-    $fonte = $_GET['fonte'];
-    $fone1 = $_GET['fone1'];
-    $fone = $_GET['fone'];
-    $ehPrefeitura = empty($_GET['ehPrefeitura']) ? 'LAR_LEGAL' : 'PREFEITURA';
-    //var_dump($_GET);
-    $query = "UPDATE wp_sml set sml_name =  $name,sml_avatar_url =  'https://graph.facebook.com/$id/picture', `sml_origem_lead` =  '$ehPrefeitura', `fonte`='$fonte',`fone_fixo`='$fone1',`obs`='$obs',sml_fone='$fone', rg='$rg', c_pf_pj='$cpf' where id = $id";
-    $result = $db->query($query);
-
-    //echo $query;
-    $db->sendEmail("Contato atualizado [Mangue vivo]", "Dados do usuário $name salvos no projeto lar legal \\n http://www.manguevivo.org.br", $_GET['email']);
-
-    $queryLog = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_log` (`author` , `acao` ) VALUES ( $id,  'ATUALIZOU PERFIL' )";
-    $result = $db->query($queryLog);
-
-    echo "<h1>Perfil atualizado</h1>";
-} else if ($acao == "processo") {
-    /**
-
-     *      */
-    $idLarLegal = $_GET['idLarLegal'];
-    $lat = $_GET['lat'];
-    $lon = $_GET['lon'];
-    $endereco = $_GET['endereco'];
-    $desc = $_GET['desc'];
-    $idLarLegal = $_GET['idLarLegal'];
-    $posse = $_GET['posse'];
-    $cv = $_GET['cv'];
-    $iptu = $_GET['iptu'];
-    $app = $_GET['app'];
-    $asfalto = $_GET['asfalto'];
-    $lixo = $_GET['lixo'];
-    $calcada = $_GET['calcada'];
-    $tempo_posse = $_GET['tempo'];
-    $esc_publica = $_GET['esc_publica'];
-    $habitese = $_GET['habitese'];
-    $ant_2014 = $_GET['ant_2014'];
-    $menor_120 = $_GET['menor_120'];
-    $projeto = $_GET['projeto'];
-    $iptu_prop = $_GET['iptu_prop'];
-
-
-    $query = "INSERT INTO `manguevi_portal_2016`.`wp_sml_lar_legal` (`id`, `fk_wp_sml`, `description`, `endereco`, `lat`, `lon`, `posse`, `cv`, "
-            . "`iptu`, `app`, `asfalto`,  `lixo`, `calcada`, `tempo_posse`, `esc_publica`, `habitese`, `ant_2014`, `menor_120`, `projeto`, `iptu_prop`) "
-            . "VALUES ($idLarLegal, '$id', '$desc', '$endereco', '$lat', '$lon', '$posse', '$cv', '$iptu', '$app', '$asfalto', '$lixo', '$calcada', '$tempo_posse'"
-            . ", $esc_publica, '$habitese',$ant_2014, $menor_120, $projeto, $iptu_prop) "
-            . "ON DUPLICATE KEY UPDATE description = '$desc', lat = '$lat',lon='$lon',endereco='$endereco',"
-            . " `posse`='$posse', `cv`='$cv', `iptu`='$iptu', `app`='$app', `asfalto`='$asfalto',  `lixo`='$lixo', `calcada`='$calcada', `tempo_posse`='$tempo_posse',"
-            . " `esc_publica`=$esc_publica, `habitese`='$habitese', `ant_2014`=$ant_2014, `menor_120`=$menor_120,  `projeto`=$projeto, `iptu_prop`=$iptu_prop";
-    //echo $query;
-    $result = $db->query($query);
-
-    $queryLog = "INSERT INTO  `manguevi_portal_2016`.`wp_sml_log` (`author` , `acao` ) VALUES ( $id,  'PROCESSO ATUALIZADO ($desc) <br> $endereco  <br> Coordenadas  ($lat / $lon)' )";
-    $result = $db->query($queryLog);
-
-    $db->sendEmail("Nova história [Mangue vivo]", "Nova história cadastrada $desc. Endereço: $endereco", "contatos@manguevivo.org.br");
-
-    echo "<h1>Processo salvo</h1>";
-}
-
-
-$queryProfile = "SELECT * FROM  `wp_sml` WHERE id =$id";
-$result = $db->query($queryProfile);
-
-
-$rperfil = mysqli_fetch_row($result);
-//var_dump($rperfil);
-?>
-
+<?php include PATH . 'inc/rules.php'; ?>
 <script>
-
-    $(function() {
-        $("#tabs").tabs();
-        $("#tabsProcesso").tabs();
-
-    });
-
-    var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-    };
-    function success(pos) {
-        initMap(pos);
-    }
-    navigator.geolocation.getCurrentPosition(success, success, options);
-    var localizacao = null;
-    var map = null;
-    function initMap(pos) {
-        var crd = pos.coords;
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: crd.latitude, lng: crd.longitude},
-            zoom: 13
-        });
-        var input = /** @type {!HTMLInputElement} */(
-                document.getElementById('pac-input'));
-
-        var types = document.getElementById('type-selector');
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
-
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var marker = new google.maps.Marker({
-            map: map,
-            anchorPoint: new google.maps.Point(0, -29)
-        });
-
-        autocomplete.addListener('place_changed', function() {
-            infowindow.close();
-            marker.setVisible(false);
-            place = autocomplete.getPlace();
-
-
-            if (!place.geometry) {
-                window.alert("Autocomplete's returned place contains no geometry");
-                return;
-            }
-            // If the place has a geometry, then present it on a map.
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);  // Why 17? Because it looks good.
-            }
-            marker.setIcon(/** @type {google.maps.Icon} */({
-                url: place.icon,
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(35, 35)
-            }));
-
-            //alert(place.geometry.location.lon());
-            //alert(place.geometry.location.lat());
-            //alert(place.geometry.location.lng());
-            localizacao = {lat: place.geometry.location.lat(), lon: place.geometry.location.lng()}
-            marker.setPosition(place.geometry.location);
-            marker.setVisible(true);
-
-            var address = '';
-            if (place.address_components) {
-                address = [
-                    (place.address_components[0] && place.address_components[0].short_name || ''),
-                    (place.address_components[1] && place.address_components[1].short_name || ''),
-                    (place.address_components[2] && place.address_components[2].short_name || '')
-                ].join(' ');
-            }
-
-            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-            infowindow.open(map, marker);
-
-            map.setZoom(14);
-
-        });
-
-        // Sets a listener on a radio button to change the filter type on Places
-        // Autocomplete.
-        function setupClickListener(id, types) {
-            var radioButton = document.getElementById(id);
-            radioButton.addEventListener('click', function() {
-                autocomplete.setTypes(types);
-            });
-        }
-
-        setupClickListener('changetype-all', []);
-        setupClickListener('changetype-address', ['address']);
-        setupClickListener('changetype-establishment', ['establishment']);
-        setupClickListener('changetype-geocode', ['geocode']);
-    }
-    function setMapaProperties(desc, idLarLegal, plat, plon, addrs, tempo, posse, cv, iptu, app, asfalto, calcada, lixo, esc_publica, habitese, ant_2014, menor_120, projeto, iptu_prop) {
-        document.processo.descricao.value = desc;
-        document.processo.idLarLegal.value = idLarLegal;
-        document.processo.endereco.value = addrs;
-        document.processo.tempo.value = tempo;
-        document.processo.posse.checked = posse;
-        document.processo.cv.checked = cv;
-        document.processo.iptu.checked = iptu;
-        document.processo.app.checked = app;
-        document.processo.asfalto.checked = asfalto;
-        document.processo.calcada.checked = calcada;
-        document.processo.lixo.checked = lixo;
-        document.processo.esc_publica.checked = esc_publica;
-        document.processo.habitese.value = habitese;
-        document.processo.ant_2014.checked = ant_2014;
-        document.processo.menor_120.value = menor_120;
-        document.processo.projeto.checked = projeto;
-        document.processo.iptu_prop.checked = iptu_prop;
-        localizacao = {lat: plat, lon: plon};
-        //alert('ha'+habitese);
-        if (habitese == "h") {
-            showHideHabit(true);
-        } else {
-            showHideHabit(false);
-        }
-
-        google.maps.event.trigger(map, "resize");
-
-        var m1 = new google.maps.Marker({
-            position: new google.maps.LatLng(plat, plon),
-            title: desc,
-            map: map,
-        });
-
-        map.panTo(m1.getPosition());
-        map.setZoom(14);
-
-    }
-
-    function saveProcesso() {
-        url = "?id=" + document.processo.id.value;
-        url += "&desc=" + document.processo.descricao.value;
-        url += "&idLarLegal=" + document.processo.idLarLegal.value;
-        url += "&pg=" + document.processo.pg.value;
-        url += "&tempo=" + document.processo.tempo.value;
-        url += "&posse=" + document.processo.posse.checked;
-        url += "&cv=" + document.processo.cv.checked;
-        url += "&iptu=" + document.processo.iptu.checked;
-        url += "&app=" + document.processo.app.checked;
-        url += "&asfalto=" + document.processo.asfalto.checked;
-        url += "&calcada=" + document.processo.calcada.checked;
-        url += "&lixo=" + document.processo.lixo.checked;
-        url += "&lat=" + localizacao.lat;
-        url += "&lon=" + localizacao.lon;
-        url += "&endereco=" + document.processo.endereco.value;
-        url += "&esc_publica=" + document.processo.esc_publica.checked;
-        url += "&habitese=" + document.processo.habitese.value;
-        url += "&ant_2014=" + document.processo.ant_2014.checked;
-        url += "&menor_120=" + document.processo.menor_120.value;
-        url += "&projeto=" + document.processo.projeto.checked;
-        url += "&iptu_prop=" + document.processo.iptu_prop.checked;
-        url += "&acao=processo";
-        // alert(url);
-
-        if (confirm("Deseja salvar o seu processo?")) {
-            //alert(url);
-            location.href = url;
-        }
-
-    }
-    function mask(o, f) {
-        setTimeout(function() {
-            var v = mphone(o.value);
-            if (v != o.value) {
-                o.value = v;
-            }
-        }, 1);
-    }
-
-    function mphone(v) {
-        var r = v.replace(/\D/g, "");
-        r = r.replace(/^0/, "");
-        if (r.length > 10) {
-            // 11+ digits. Format as 5+4.
-            r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "+($1) $2-$3");
-        }
-        else if (r.length > 5) {
-            // 6..10 digits. Format as 4+4
-            r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "+($1) $2-$3");
-        }
-        else if (r.length > 2) {
-            // 3..5 digits. Add (0XX..)
-            r = r.replace(/^(\d\d)(\d{0,5})/, "+($1) $2");
-        }
-        else {
-            // 0..2 digits. Just add (0XX
-            r = r.replace(/^(\d*)/, "+($1");
-        }
-        return r;
-    }
-    function mascaraMutuario(o, f) {
-        v_obj = o
-        v_fun = f
-        setTimeout('execmascara()', 1)
-    }
-
-    function execmascara() {
-        v_obj.value = v_fun(v_obj.value)
-    }
-
-    function cpfCnpj(v) {
-
-        //Remove tudo o que não é dígito
-        v = v.replace(/\D/g, "")
-
-        if (v.length <= 14) { //CPF
-
-            //Coloca um ponto entre o terceiro e o quarto dígitos
-            v = v.replace(/(\d{3})(\d)/, "$1.$2")
-
-            //Coloca um ponto entre o terceiro e o quarto dígitos
-            //de novo (para o segundo bloco de números)
-            v = v.replace(/(\d{3})(\d)/, "$1.$2")
-
-            //Coloca um hífen entre o terceiro e o quarto dígitos
-            v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
-
-        } else { //CNPJ
-
-            //Coloca ponto entre o segundo e o terceiro dígitos
-            v = v.replace(/^(\d{2})(\d)/, "$1.$2")
-
-            //Coloca ponto entre o quinto e o sexto dígitos
-            v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-
-            //Coloca uma barra entre o oitavo e o nono dígitos
-            v = v.replace(/\.(\d{3})(\d)/, ".$1/$2")
-
-            //Coloca um hífen depois do bloco de quatro dígitos
-            v = v.replace(/(\d{4})(\d)/, "$1-$2")
-
-        }
-
-        return v
-
-    }
-    function novo() {
-        if (confirm('Deseja cadastrar outro processo do Lar legal?')) {
-            document.processo.endereco.value = "";
-            document.processo.descricao.value = "";
-            document.processo.idLarLegal.value = "NULL";
-        }
-    }
-    function loadAnexos(element) {
-        if (element.value != "") {
-            document.getElementById('anexos').src = 'https://manguevivo.org.br/wp/wp-content/themes/vantage/templates/upload.php?id=' + element.value;
-        }
-    }
-
-    function showHideHabit(v) {
-        if (v) {
-            $("#frmLarLegal").hide();
-            $("#frmHabitese").show();
-        } else {
-            $("#frmHabitese").hide();
-            $("#frmLarLegal").show();
-        }
-
-    }
-
+<?php include PATH . 'inc/blocked.js'; ?>
 </script>
 <div id="tabs">
     <ul>
@@ -631,16 +225,21 @@ $rperfil = mysqli_fetch_row($result);
 
                 <form name="processo" style="max-width:100%;min-width:150px" method="get">
                     <div class="title">
-                        <h2>Conte a sua história para que possamos fazer o seu lar legal ou habite-se!</h2>
+                        <h2>Qual seu interesse?</h2>
                         <small>**Habite-se apenas para Florianópolis</small>
                     </div>
                     <div class="element-input">
                         <label><input type="radio" name="habitese" value="h" onclick="showHideHabit(true)"/>Habite-se</label>
-                        <label><input type="radio" name="habitese" value="l" checked="true" onclick="showHideHabit(false)"/>Lar legal</label>
+                        <label><input type="radio" name="habitese" value="l" checked="true" onclick="showHideHabit(false)"/>Escritura pública</label>
                     </div>
                     <br>
+                    <div class="element-input">
+                        <input type="checkbox" name="posse"/><label id="txtPosseTit">Tem escritura de posse?</label>
+                    </div>
                     <div id="frmHabitese" class="element-input">
-                        Dados para o habite-se
+                        <div class="element-input">
+                            <label><input type="checkbox" name="calcada"/>Imóvel tem matrícula no registro de imóveis?</label>
+                        </div>
                         <div class="element-input" title="Matrícula no registro de imóveis / escritura de posse">
                             <label><input type="checkbox" name="esc_publica"/>O Imóvel tem escritura publica?</label>
                         </div>
@@ -648,17 +247,27 @@ $rperfil = mysqli_fetch_row($result);
                             <label><input type="checkbox" name="ant_2014"/>A Construção é anterior a 2016</label>
                         </div>
                         <div class="element-input">
-                            <label>Área construindo mt²<input type="number" name="menor_120" title="Informe a área total construída em metros quadrados"/></label>
+                            <label>
+                                Área construida mt²
+                                <select name="menor_120" >
+                                    <option value=""></option>
+                                    <option value="1">até 120 m²</option>
+                                    <option value="2">acima de 120 m²</option>
+                                </select>
+                            </label>
                         </div>
                         <div class="element-input">
-                            <label><input type="checkbox" name="projeto"/>Existe Projeto aprovado;</label>
+                            <label><input type="checkbox" name="projeto" onclick="showHideProjects(this)">Existe Projeto?</label>
+                            <br>
+                            <div id="projetos_chk" style="border: 1px;border-color: #34495e;visibility: hidden;display: none;">
+                                <label><input type="checkbox" name="p_hid" value="h"/>Hidráulico</label>
+                                <label><input type="checkbox" name="p_arq" value="a"/>Arquitetonico</label>
+                                <label><input type="checkbox" name="p_est" value="e"/>Estrutural</label>
+                            </div>
                         </div>
                     </div>
 
                     <div id="frmLarLegal" class="element-input">
-                        <br>
-                        Informe detalhadamente as características da situação atual de seu imóvel.<br>
-
                         <div class="element-input">
                             <label><input type="checkbox" name="cv"/>Contrato de compra e venda?</label>
                         </div>
@@ -669,13 +278,11 @@ $rperfil = mysqli_fetch_row($result);
                             <label><input type="checkbox" name="app"/>Área APP ou APL?</label>
                         </div>
                         <div class="element-input" >
-                            <label><input  type="checkbox" name="asfalto"/>Rua asfaltada?</label>
+                            <label><input  type="checkbox" name="asfalto"/>Rua asfaltada ou calçada?</label>
                         </div>
+
                         <div class="element-input">
-                            <label><input type="checkbox" name="calcada"/>Rua calçada?</label>
-                        </div>
-                        <div class="element-input">
-                            <label><input type="checkbox" name="lixo"/>Luz, Água, Coleta de lixo?</label>
+                            <label><input type="checkbox" name="lixo"/>Serviço de Luz, Água ou Coleta de lixo?</label>
                         </div>
                         <div class="element-input">
                             <label>Tempo de posse (anos)<input type="number" name="tempo" title="Informe o tempo de posse. Número de anos"/></label>
@@ -686,14 +293,13 @@ $rperfil = mysqli_fetch_row($result);
                         <input type="hidden" name="idLarLegal" value="NULL"/>
                         <input type="hidden" name="acao" value="save_lar_legal"/>
                     </div>
-                    <div class="element-input">
-                        <label><input type="checkbox" name="posse"/>Escritura de posse?</label>
-                    </div>
+
                     <div class="element-input">
                         <label><input type="checkbox" name="iptu_prop"/>O IPTU esta no nome do proprietário?</label>
                     </div>
+                    <br>
                     <div  class="element-input">
-                        <label>Conte mais sobre o seu imóvel</label><br>
+                        <label id="titDescInner">Conte mais sobre o seu imóvel</label><br>
                         <textarea class="large" type="text" name="descricao" placeholder="Descricao" cols="40" rows="5" title="Ex: Terreno de herança em nome do avô no bairro siriu garopaba"></textarea>
                     </div>
                     <br>
@@ -706,7 +312,7 @@ $rperfil = mysqli_fetch_row($result);
                     <br>
                     <div class="submit">
                         <input type="button" value="Salvar" onclick="saveProcesso()"/>
-                        <input type="reset" value="Cancelar"/>
+                        <input type="reset" value="Cancelar" onclick="document.processo.reset()"/>
                         <input type="button" value="Novo" onclick="novo()"/>
                     </div>
                     <script>
@@ -721,7 +327,7 @@ $rperfil = mysqli_fetch_row($result);
                 Clique no processo para editar
                 <ol id="selectable">
                     <?php
-                    $query = "SELECT `id`,upper(description),`endereco`,dt_registro,lat,lon,IFNULL(tempo_posse,0),IFNULL(calcada,'false'),IFNULL(lixo,'false'),IFNULL(asfalto,'false'),IFNULL(app,'false'),IFNULL(iptu,'false'),IFNULL(cv,'false'),IFNULL(posse,'false'),IFNULL(esc_publica,'false'),habitese,IFNULL(ant_2014,'false'),IFNULL(menor_120,'false'),IFNULL(projeto,'false'),IFNULL(iptu_prop,'false') FROM `wp_sml_lar_legal` WHERE fk_wp_sml = $id";
+                    $query = "SELECT `id`,upper(description),`endereco`,dt_registro,lat,lon,IFNULL(tempo_posse,0),IFNULL(calcada,'false'),IFNULL(lixo,'false'),IFNULL(asfalto,'false'),IFNULL(app,'false'),IFNULL(iptu,'false'),IFNULL(cv,'false'),IFNULL(posse,'false'),IFNULL(esc_publica,'false'),habitese,IFNULL(ant_2014,'false'),IFNULL(menor_120,'false'),IFNULL(projeto,'false'),IFNULL(iptu_prop,'false'),p_hid,p_arq,p_est FROM `wp_sml_lar_legal` WHERE fk_wp_sml = $id";
 
 //echo $query;
                     $result = $db->query($query);
@@ -733,7 +339,7 @@ $rperfil = mysqli_fetch_row($result);
                             function setMapaProperties(desc, idLarLegal, plat, plon, addrs, tempo, posse, cv, iptu, app, asfalto, calcada, lixo, esc_publica, habitese, ant_2014, menor_120, projeto, iptu_prop) {
 
                             -->
-                            <a href="javascript:setMapaProperties('<?php echo $processo[1]; ?>','<?php echo $processo[0]; ?>', '<?php echo $processo[4]; ?>', '<?php echo $processo[5]; ?>', '<?php echo $processo[2]; ?>','<?php echo $processo[6]; ?>',<?php echo $processo[13]; ?>,<?php echo $processo[12]; ?>,<?php echo $processo[11]; ?>,<?php echo $processo[10]; ?>,<?php echo $processo[9]; ?>,<?php echo $processo[7]; ?>,<?php echo $processo[8]; ?>,'<?php echo $processo[14]; ?>','<?php echo $processo[15]; ?>',<?php echo $processo[16]; ?>,<?php echo $processo[17]; ?>,<?php echo $processo[18]; ?>,<?php echo $processo[19]; ?>)">
+                            <a href="javascript:setMapaProperties('<?php echo $processo[1]; ?>','<?php echo $processo[0]; ?>', '<?php echo $processo[4]; ?>', '<?php echo $processo[5]; ?>', '<?php echo $processo[2]; ?>','<?php echo $processo[6]; ?>',<?php echo $processo[13]; ?>,<?php echo $processo[12]; ?>,<?php echo $processo[11]; ?>,<?php echo $processo[10]; ?>,<?php echo $processo[9]; ?>,<?php echo $processo[7]; ?>,<?php echo $processo[8]; ?>,'<?php echo $processo[14]; ?>','<?php echo $processo[15]; ?>',<?php echo $processo[16]; ?>,<?php echo $processo[17]; ?>,<?php echo $processo[18]; ?>,<?php echo $processo[19]; ?>,'<?php echo $processo[20]; ?>','<?php echo $processo[21]; ?>','<?php echo $processo[2]; ?>')">
                                 <img src="http://manguevivo.org.br/wp/wp-content/themes/vantage/templates/assets/images/edit.png" title="Editar" alt="editar" width="20" height="20"/>
                             </a>
                             <b>Localização:</b><?php echo substr($processo[2], 0, 200); ?>...
