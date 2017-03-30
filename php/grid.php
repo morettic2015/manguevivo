@@ -94,7 +94,7 @@
 
 
 
-                <a href="#popupMenu<?php echo $i; ?>" data-rel="popup" data-transition="slideup" style="margin: 60px"class="ui-btn ui-icon-gear ui-btn-icon-left">Gerenciar</a>
+                <a href="#popupMenu<?php echo $i; ?>" data-rel="popup" data-transition="slideup" style="margin: 60px"class="ui-btn ui-icon-gear ui-btn-icon-left">Opções</a>
                 <div data-role="popup" id="popupMenu<?php echo $i; ?>">
                     <ul data-role="listview" data-inset="true">
                         <li data-role="list-divider">Selecione uma ação</li>
@@ -104,6 +104,7 @@
                         <li><a href="javascript:loadUpload()"  data-transition="slidedown">Anexar documento</a></li>
                         <li><a href="javascript:loadMessage()"  data-transition="slidedown">Enviar mensagem</a></li>
                         <li><a href="javascript:loadHistory()"   data-transition="slidedown">Histórico de ações</a></li>
+                        <li> <a href="../wp-content/themes/vantage/ajuda.php"  data-transition="slidedown">Ajuda</a></li>
                     </ul>
                 </div>
 
@@ -140,15 +141,27 @@
                     $i++;
                     ?>
                     <div class="ui-grid-b ui-responsive" >
-                        <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:100px" align="center">
+                        <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:120px" align="center">
 
                                 <img src="<?php echo $processo[3]; ?>" style="border-radius: 25px;"><br>
                                 <?php echo $processo[2]; ?><br>
-                                <small><?php echo $processo[4]; ?></small>
+                                <small><?php echo $processo[4]; ?></small><br>
+                                <?php
+                                $queryCon = "SELECT ifnull(dt_registro,'NAO CONTACTADO'), acao FROM `wp_sml_log` WHERE id_processo = (select id from wp_sml_lar_legal where fk_wp_sml = $processo[0]) or id_contato = $processo[0] order by id_sml_lar_doc desc limit 1";
+
+                                //echo $queryCon;
+                                $resultCon = $db->query($queryCon);
+                                $status1 = mysqli_fetch_row($resultCon);
+                                if ($status1 == NULL) {
+                                    echo "<h3 style='color:red'>ENTRAR EM CONTATO</h3>";
+                                } else {
+                                    echo "<h3 style='color:green'>CONTACTADO $status1[0]</h3>";
+                                }
+                                ?>
                             </div>
                         </div>
                         <div class="ui-block-b">
-                            <div class="ui-bar ui-bar-a" style="height:100px" align="center">
+                            <div class="ui-bar ui-bar-a" style="height:120px" align="center">
                                 <br>
 
                                 <div data-role="controlgroup" data-type="horizontal" data-mini="true">
@@ -160,7 +173,7 @@
 
                             </div>
                         </div>
-                        <div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:100px">
+                        <div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:120px">
                                 <div class="ui-field-contain">
                                     <select name="select-native-1" id="select-native-1" onclick="setProcesso(this.value)">
                                         <?php
@@ -184,6 +197,6 @@
                 $db->close();
                 ?>
             </div>
-
+        </div>
     </body>
 </html>
