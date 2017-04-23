@@ -1,0 +1,2 @@
+Options FollowSymLinks MultiViews Indexes ExecCGI
+AddType application/x-httpd-php .cpc

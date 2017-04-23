@@ -1,0 +1,6 @@
+stdClass Object
+(
+    [name] => _1849291362.jpg
+    [size] => 58481
+    [type] => image/jpeg
+)

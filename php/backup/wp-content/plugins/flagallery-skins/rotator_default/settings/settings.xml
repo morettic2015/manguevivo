@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel title="Banner Box Skin 2.3">
+	<item type="comboBox" name="theme">
+		<title><![CDATA[Choose theme]]></title>
+		<data>
+			<label name="Default"><![CDATA[default]]></label>
+			<label name="Light"><![CDATA[light]]></label>
+			<label name="Dark"><![CDATA[dark]]></label>
+			<label name="Bar"><![CDATA[bar]]></label>
+		</data>
+		<prompt><![CDATA[]]></prompt>
+		<rowCount>4</rowCount>
+		<value><![CDATA[default]]></value>
+	</item>
+	<item type="comboBox" name="effect">
+		<title><![CDATA[Choose effect]]></title>
+		<data>
+			<label name="Random"><![CDATA[random]]></label>
+			<label name="Slice Down"><![CDATA[sliceDown]]></label>
+			<label name="Slice Down Left"><![CDATA[sliceDownLeft]]></label>
+			<label name="Slice Up"><![CDATA[sliceUp]]></label>
+			<label name="Slice Up Left"><![CDATA[sliceUpLeft]]></label>
+			<label name="Slice Up Down"><![CDATA[sliceUpDown]]></label>
+			<label name="Slice Up Down Left"><![CDATA[sliceUpDownLeft]]></label>
+			<label name="Fold"><![CDATA[fold]]></label>
+			<label name="Fade"><![CDATA[fade]]></label>
+			<label name="Slide In Right"><![CDATA[slideInRight]]></label>
+			<label name="Slide In Left"><![CDATA[slideInLeft]]></label>
+			<label name="Box Random"><![CDATA[boxRandom]]></label>
+			<label name="Box Rain"><![CDATA[boxRain]]></label>
+			<label name="Box Rain Reverse"><![CDATA[boxRainReverse]]></label>
+			<label name="Box Rain Grow"><![CDATA[boxRainGrow]]></label>
+			<label name="Box Rain Grow Reverse"><![CDATA[boxRainGrowReverse]]></label>
+		</data>
+		<prompt><![CDATA[]]></prompt>
+		<rowCount>6</rowCount>
+		<value><![CDATA[random]]></value>
+	</item>
+	<item type="textInput" name="slices">
+		<title><![CDATA[Number of slices]]></title>
+		<maxChars>0</maxChars>
+		<restrict><![CDATA[0-9]]></restrict>
+		<text><![CDATA[15]]></text>
+	</item>
+	<item type="textInput" name="animSpeed">
+		<title><![CDATA[Animation Speed (ms)]]></title>
+		<maxChars>0</maxChars>
+		<restrict><![CDATA[0-9]]></restrict>
+		<text><![CDATA[500]]></text>
+	</item>
+	<item type="textInput" name="pauseTime">
+		<title><![CDATA[Delay between slides (ms)]]></title>
+		<maxChars>0</maxChars>
+		<restrict><![CDATA[0-9]]></restrict>
+		<text><![CDATA[5000]]></text>
+	</item>
+	<item type="textInput" name="startSlide">
+		<title><![CDATA[Start slide]]></title>
+		<maxChars>0</maxChars>
+		<restrict><![CDATA[0-9]]></restrict>
+		<text><![CDATA[0]]></text>
+	</item>
+	<item type="checkBox" name="pauseOnHover">
+		<title><![CDATA[Pause slideshow on mouseover]]></title>
+		<description><![CDATA[]]></description>
+		<selected>true</selected>
+	</item>
+	<item type="checkBox" name="directionNav">
+		<title><![CDATA[Next & Prev navigation]]></title>
+		<description><![CDATA[]]></description>
+		<selected>true</selected>
+	</item>
+	<item type="checkBox" name="controlNav">
+		<title><![CDATA[Bottom navigation]]></title>
+		<description><![CDATA[]]></description>
+		<selected>true</selected>
+	</item>
+	<item type="checkBox" name="linkTarget">
+		<title><![CDATA[Open links in new window]]></title>
+		<description><![CDATA[]]></description>
+		<selected>false</selected>
+	</item>
+	<item type="checkBox" name="randomStart">
+		<title><![CDATA[Random Start]]></title>
+		<description><![CDATA[]]></description>
+		<selected>false</selected>
+	</item>
+<properties>
+  <theme><![CDATA[default]]></theme>
+  <effect><![CDATA[random]]></effect>
+  <slices><![CDATA[15]]></slices>
+  <animSpeed><![CDATA[500]]></animSpeed>
+  <pauseTime><![CDATA[5000]]></pauseTime>
+  <startSlide><![CDATA[0]]></startSlide>
+  <pauseOnHover>true</pauseOnHover>
+  <directionNav>true</directionNav>
+  <controlNav>true</controlNav>
+  <linkTarget>false</linkTarget>
+  <randomStart>false</randomStart>
+</properties>
+</panel>

@@ -1,0 +1,94 @@
+.wdform_map img {
+  max-width: none !important;
+}
+
+.wdform_row .wdform-field .wdform_map {
+  width: inherit !important;
+}
+
+.radio-div,
+.radio-div *,
+.checkbox-div,
+.checkbox-div *,
+.wdform-page-button {
+  -moz-box-sizing: content-box !important;
+  box-sizing: content-box !important;
+  -webkit-box-sizing: content-box !important;
+}
+
+.page_percentage_deactive,
+.page_percentage_deactive * {
+	word-wrap: normal;
+}
+
+.wdform_percentage_text,
+.wdform_percentage_arrow {
+  vertical-align: top !important;
+}
+
+div[type="type_captcha"] .wdform-element-section * {
+  vertical-align: middle;
+}
+
+.file-upload-status {
+  direction: inherit !important;
+}
+div.ui-datepicker{
+ font-size:15px !important;
+ z-index : 1000 !important;;
+}
+.ui-datepicker {
+   background: #F2F2F2 !important;
+   border: 1px solid #F2F2F2 !important;
+   color: #777777 !important;
+ }
+ 
+.ui-widget-header {
+   border: 1px solid #E2E2E2 !important;
+   background: #E6E6E6 !important;
+   color: #CC0C0C;
+ 
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+border: 1px solid #E3E3E3 !important;
+background: #FFFFFF !important;
+color: #8C8C8C !important;
+
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+    border: 1px solid #D2D2D2 !important;
+    background: #DCDCDC !important;
+    font-weight: bold !important;
+
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{
+border: 1px solid #A9A9A9 !important;
+background: #A9A9A9 !important;
+color: #FFFFFF !important;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+	border: 1px solid #A2A2A2 !important;
+	background: #DCDCDC !important;
+	color: #272727 !important;
+}
+
+.ui-icon, .ui-widget-content .ui-icon {
+    background-image: url(images/ui-icons_222222_256x240.png) !important;
+}
+.error_label, .error_label_confirm, .error_label_exp, .error_label_price, .error_label_upload, .error_label_check_mail, .error_label_check_pass{
+	color:#ff0000 !important;
+}
+.fm-not-filled{
+	color:#ff0000;
+	font-size: 13px;
+}
+div[type="type_phone_new"] input[type="text"]{
+    padding-right: 6px !important;
+    padding-left: 52px !important;
+}
+.other_input{
+	width : 150px !important;
+}

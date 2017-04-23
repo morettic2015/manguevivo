@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel title="Minima 1.4">
+	<item type="checkBox" name="autoSlideshow">
+		<title><![CDATA[AutoSlideshow]]></title>
+		<description><![CDATA[]]></description>
+		<selected>true</selected>
+	</item>	
+	<item type="numericSteper" name="slideshowDelay">
+		<title><![CDATA[Slideshow Delay]]></title>
+		<description><![CDATA[]]></description>
+		<maximum>30</maximum>
+		<minimum>0</minimum>
+		<stepSize>1</stepSize>
+		<value>10</value>
+	</item>
+	<item type="numericSteper" name="thumbnailsHeight">
+		<title><![CDATA[Thumbnail Height]]></title>
+		<description><![CDATA[]]></description>
+		<maximum>300</maximum>
+		<minimum>40</minimum>
+		<stepSize>1</stepSize>
+		<value>75</value>
+	</item>	
+	<item type="numericSteper" name="thumbnailsWidth">
+		<title><![CDATA[Thumbnail Width]]></title>
+		<description><![CDATA[]]></description>
+		<maximum>300</maximum>
+		<minimum>40</minimum>
+		<stepSize>1</stepSize>
+		<value>75</value>
+	</item>	
+	<item type="comboBox" name="property0">
+		<title><![CDATA[Flash Object WMode]]></title>
+		<description><![CDATA[If 'transparent' - "Background Color" option is ignored, but you can position the absolute elements over the flash.]]></description>
+		<data>
+			<label name="Window"><![CDATA[window]]></label>
+			<label name="Transparent"><![CDATA[transparent]]></label>
+			<label name="Opaque"><![CDATA[opaque]]></label>
+		</data>
+		<prompt><![CDATA[]]></prompt>
+		<rowCount>3</rowCount>
+		<value><![CDATA[opaque]]></value>
+	</item>
+	<item type="checkBox" name="swfmousewheel">
+		<title><![CDATA[SWF Mouse Wheel]]></title>
+		<description><![CDATA[Turn On/Off mouse wheel detection over Gallery.]]></description>
+		<selected>false</selected>
+	</item>	
+	<item type="colorPicker" name="property1">
+		<title><![CDATA[Background Color]]></title>
+		<description><![CDATA[]]></description>
+		<showTextField>true</showTextField>
+	<selectedColor>0xffffff</selectedColor>
+	</item>
+	<item type="checkBox" name="counterStatus">
+		<title><![CDATA[Show image views/likes counter]]></title>
+		<selected>true</selected>
+	</item>	
+	<item type="colorPicker" name="barBgColor">
+		<title><![CDATA[Header & Footer Background Color]]></title>
+	<description><![CDATA[]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0x282828</selectedColor>	
+	</item>	
+	<item type="colorPicker" name="labelColor">
+		<title><![CDATA[Label Color (Buttons)]]></title>
+		<description><![CDATA[]]></description>
+		<showTextField>true</showTextField>
+	<selectedColor>0x75c30f</selectedColor>
+	</item>	
+	<item type="colorPicker" name="labelColorOver">
+	<title><![CDATA[Label MouseOver Color (Buttons)]]></title>
+		<description><![CDATA[]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0xffffff</selectedColor>
+	</item>
+	<item type="colorPicker" name="backgroundColorButton">
+		<title><![CDATA[Background Color (Buttons)]]></title>
+		<description><![CDATA[]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0x000000</selectedColor>
+	</item>		
+	<item type="colorPicker" name="descriptionBGColor">
+		<title><![CDATA[Description BG Color]]></title>
+		<description><![CDATA[Background for the image description that appears on mouseover.]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0x000000</selectedColor>
+	</item>	
+	<item type="slider" name="descriptionBGAlpha">
+		<title><![CDATA[Description BG Alpha]]></title>
+		<description><![CDATA[Opacity of the image description background.]]></description>
+		<maximum>100</maximum>
+		<minimum>0</minimum>
+		<snapInterval>5</snapInterval>
+		<tickInterval>5</tickInterval>
+		<value>75</value>
+	</item>
+	<item type="colorPicker" name="imageTitleColor">
+		<title><![CDATA[Image Title Color]]></title>
+		<description><![CDATA[Color of text for image title in the description.]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0x75c30f</selectedColor>
+	</item>
+	<item type="numericSteper" name="galleryTitleFontSize">
+		<title><![CDATA[Gallery Title Font Size]]></title>
+		<description><![CDATA[]]></description>
+		<maximum>30</maximum>
+		<minimum>10</minimum>
+		<stepSize>1</stepSize>
+		<value>15</value>
+	</item>
+	<item type="numericSteper" name="titleFontSize">
+		<title><![CDATA[Image Title Font Size]]></title>
+		<description><![CDATA[]]></description>
+		<maximum>30</maximum>
+		<minimum>10</minimum>
+		<stepSize>1</stepSize>
+		<value>12</value>
+	</item>
+	<item type="colorPicker" name="imageDescriptionColor">
+		<title><![CDATA[Image Description Color (Text)]]></title>
+		<description><![CDATA[Color of text for image description.]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0xffffff</selectedColor>
+	</item>
+	<item type="numericSteper" name="descriptionFontSize">
+		<title><![CDATA[Image Description Font Size]]></title>
+		<description><![CDATA[]]></description>
+		<maximum>30</maximum>
+		<minimum>10</minimum>
+		<stepSize>1</stepSize>
+		<value>12</value>
+	</item>
+	<item type="colorPicker" name="linkColor">
+		<title><![CDATA[Link Color (image description)]]></title>
+		<description><![CDATA[]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0xffffff</selectedColor>
+	</item>
+	<item type="colorPicker" name="backButtonColorText">
+		<title><![CDATA[Back Button Text Color]]></title>
+		<description><![CDATA[Full Window Gallery Template.]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0xffffff</selectedColor>
+	</item>	
+	<item type="colorPicker" name="backButtonColorBg">
+		<title><![CDATA[Back Button BG Color]]></title>
+		<description><![CDATA[Full Window Gallery Template.]]></description>
+		<showTextField>true</showTextField>
+		<selectedColor>0x000000</selectedColor>
+	</item>
+    <item type="checkBox" name="showAlternate">
+        <title><![CDATA[Show Alternative JS Gallery instead of Flash]]></title>
+        <description><![CDATA[This option is just if you want to see how the gallery looks on browsers without flash support]]></description>
+        <selected>false</selected>
+    </item>
+<properties>
+  <property0><![CDATA[opaque]]></property0>
+  <swfmousewheel>false</swfmousewheel>
+  <property1>0xffffff</property1>
+  <slideshowDelay>10</slideshowDelay>
+  <thumbnailsHeight>75</thumbnailsHeight>
+  <thumbnailsWidth>75</thumbnailsWidth>
+  <showDownload>true</showDownload>
+  <autoSlideshow>true</autoSlideshow>
+  <labelColor>0x75c30f</labelColor>
+  <labelColorOver>0xffffff</labelColorOver>
+  <backgroundColorButton>0x000000</backgroundColorButton>
+  <thumbnailBGColor>0xffffff</thumbnailBGColor>
+  <property12>0x75c30f</property12>
+  <descriptionBGColor>0x000000</descriptionBGColor>
+  <descriptionBGAlpha>75</descriptionBGAlpha>
+  <imageTitleColor>0x75c30f</imageTitleColor>
+  <imageDescriptionColor>0xffffff</imageDescriptionColor>
+  <backButtonColorText>0xffffff</backButtonColorText>
+  <backButtonColorBg>0x000000</backButtonColorBg>
+  <barBgColor>0x282828</barBgColor>
+  <titleFontSize>12</titleFontSize>
+  <galleryTitleFontSize>15</galleryTitleFontSize>
+  <linkColor>0xffffff</linkColor>
+  <descriptionFontSize>12</descriptionFontSize>
+  <counterStatus>true</counterStatus>
+  <showAlternate>false</showAlternate>
+</properties>
+
+</panel>
